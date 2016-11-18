@@ -47,20 +47,23 @@ module.exports = {
         /** rendering **/
 
         /* wrapper for layout queries + custom queries */
-        function provide( method, path, queries, callback ) {
+        function provide( method, path, opts, callback ) {
+            opts = opts || {}
             console.log( "PROVIDE".bold.magenta, method, path );
 
             /* combine query-object, allow override */
-            queries = _.extend( {}, layoutQueries, queries );
+            var queries = _.isFunction( opts.queries ) ? opts.queries : function() { return opts.queries || {} };
             /* register path */
             k.router[ method ]( path, function( req, res, next ) {
+                /* assemble queries */
+                var callQueries = _.extend( {}, layoutQueries, queries( req ) );
                 /* send all queires at once */
-                db.query( _.values( queries ).join(";"), function( err, data ) {
+                db.query( _.values( callQueries ).join(";"), function( err, data ) {
                     if( err ) return next( err ); // handle errors directly
 
                     /* assign results */
                     var vals = {}, i=0;
-                    _.keys( queries ).forEach( function( key ) {
+                    _.keys( callQueries ).forEach( function( key ) {
                         vals[ key ] = data[ i++ ];
                     });
                     /* perform callback */
@@ -82,18 +85,34 @@ module.exports = {
                         if( item.link.indexOf("http") >= 0 ) return;
 
                         /* query articles if requested */
+                        var file = path.parse( item.file );
                         var queries = {};
                         if( item.category > 0 )
-                            queries.articles = mysql.format( "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName"
-                                + " FROM articles INNER JOIN users ON articles.user=users.id"
-                                + " WHERE category=? ORDER BY created DESC", [ item.category ] );
+                            queries = function( req ) {
+                                k.requestman( req );
+                                var offset = parseInt(req.requestman.uint("offset")||"0") || 0;
+                                return { articles: mysql.format( 
+                                       "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName"
+                                    + " FROM articles INNER JOIN users ON articles.user=users.id"
+                                    + " WHERE category=? ORDER BY created DESC LIMIT ?,10", [ item.category, offset ] )
+                                }
+                            }
+
+                        /* register ajax */
+                        if( item.category > 0 && file.ext == ".jade" )
+                            provide( "get", "/ajax/articles/offset" + item.link + "/:offset", { queries: queries },
+                            function( req, res, data )  {
+                                var offset = req.requestman ? parseInt(req.requestman.uint( "offset" )||"0") : 0;
+                                k.jade.render( req, res, file.name, _.extend( data, { naked: true, link: item.link, offset: offset } ) );
+                            });
+
 
                         /* register provider */
-                        var file = path.parse( item.file );
-                        provide( "get", item.link, queries, function( req, res, data ) {
+                        provide( "get", item.link + "/:offset?", { queries: queries }, function( req, res, data ) {
                             switch( file.ext ) {
                                 case ".jade":
-                                    k.jade.render( req, res, file.name, _.extend( data, { bodyClass: item.class } ) );
+                                    var offset = req.requestman ? parseInt(req.requestman.uint( "offset" )||"0") : 0;
+                                    k.jade.render( req, res, file.name, _.extend( data, { link: item.link, bodyClass: item.class, offset: offset } ) );
                                     break;
                                 default:
                                     httpStatus( req, res, 501, { title: "Unknown file-extension", text: "File-extension " + file.ext + " is not handled by site-provider" } );
@@ -107,12 +126,12 @@ module.exports = {
             },
             function( done ) {
                 /** home **/
-                provide( "get", "/", {
+                provide( "get", "/", { queries: {
                     "articlesHot": "SELECT * FROM articles WHERE hot",
                     "articles": "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName"
                             + "  FROM articles INNER JOIN users ON articles.user=users.id"
                             + "  WHERE frontPage AND expires > NOW() ORDER BY created DESC LIMIT 10"
-                }, function( req, res, data ) {
+                } }, function( req, res, data ) {
                     k.jade.render( req, res, "home", _.extend( data, { bodyClass: "home" } ) );
                 });
                 done();

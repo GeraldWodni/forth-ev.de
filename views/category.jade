@@ -1,14 +1,29 @@
 //- Kategorie Haupttemplate: vererbt einen header und rendert alle Artikel
 
 extends layout
-
 block menu
     +menu
 
+mixin pageNavigation(opts)
+    if articles.length == 10
+        +box.pageNavigation.text-center&attributes(attributes)
+            if( offset > 0 )
+                a(href=link + "/" + Math.max(0,(offset-10))).btn.btn-primary.nojs
+                    +fa("chevron-left")
+                    |  Zurück
+                |  
+            a(href=link + "/" + (offset+10)).btn.btn-primary
+                | Weiter 
+                +fa("chevron-right")
+
 block content
-    +box.header
-        block header
+    if !naked
+        +box.header
+            block header
+
+        +pageNavigation.nojs
 
     each article in articles
         +article(article)
 
+    +pageNavigation(data-load-on-scroll="/ajax/articles/offset" + link + "/" + (offset+10))

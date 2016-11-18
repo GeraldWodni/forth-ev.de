@@ -1,0 +1,28 @@
+include mixins
+mixin gravatar( emailMd5, name, size, def )
+    - def = def || "retro"
+    //-img(src="http://www.gravatar.com/avatar/#{emailMd5}?s=#{size}&d=#{def}",alt="avatar of #{name}")&attributes(attributes)
+    img(src="/proxy/gravatar/#{emailMd5}/#{size}/#{def}",alt="avatar of #{name}")&attributes(attributes)
+
+mixin avatar( name, emailMd5, size )
+    //- a.avatar(href="/~#{user.name}")
+    div.avatar
+        +gravatar( emailMd5, name, size )
+        span.name= name
+
+mixin box
+    div.box&attributes(attributes)
+        div.container
+            block
+
+mixin article( article )
+    +box.article&attributes(attributes)
+        +avatar( article.userName, article.userEmailMd5, 64 )
+        .created= moment(article.created).format("DD.MM.YYYY")
+        h3= article.title
+        p!= article.intro.replace( /src="\/images\//g, 'src="http://forth-ev.de/images/' )
+        if article.body.length > 0
+            .expander(data-article=article.id)
+                +fa("angle-down")
+                span Mehr
+                +fa("angle-down")
