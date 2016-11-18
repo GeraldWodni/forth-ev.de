@@ -1,0 +1,44 @@
+/*
+    Soderregeln für Hauptseite "home"
+    - weniger Fokus auf Hauptnavigation
+    - großes Logo -> Kein "brand" in der Navigationsleiste
+    - Separator mit "hot"-Einträgen
+*/
+
+body.home {
+    /* Überschrift */
+    .box.forth-ev {
+        img {
+            width: 192px;
+            height: 192px;
+            display: block;
+            float: left;
+            margin-right: 50px;
+        }
+        h1 {
+            font-size: 80px;
+        }
+        h2 {
+            font-size: 40px;
+        }
+
+    }
+
+    /* Navigation */
+    .navbar {
+        //background-color: #DDD;
+    }
+
+    /* Hot-Einträge */
+    .box.hot {
+        margin-top: @hot-margin;
+        margin-bottom: @hot-margin;
+        
+        background-color: @hot-background;
+        h2 {
+            color: green
+        }
+
+    }
+}
+

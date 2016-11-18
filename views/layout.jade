@@ -1,0 +1,107 @@
+//- (c)2014 by Gerald Wodni
+
+doctype html
+include mixins
++script('/js/jquery.min.js')
++script('/js/site.js')
+
+mixin menuItem( link, icon, text )
+    li&attributes(attributes)
+        a(href="#{link}",title=text.all||text,target=(link.indexOf("http")==0?"_blank":false))
+            +fa(icon)
+            | 
+            if( _.isObject( text ) )
+                each size in ["sm", "md", "lg"]
+                    span(class="inline-#{size}")
+                        if _.has( text, size )
+                            = text[size]
+                        else
+                            = text.all
+            else
+                span.hidden-xs= text
+
+mixin gravatar( emailMd5, name, size, def )
+    - def = def || "retro"
+    //-img(src="http://www.gravatar.com/avatar/#{emailMd5}?s=#{size}&d=#{def}",alt="avatar of #{name}")&attributes(attributes)
+    img(src="/proxy/gravatar/#{emailMd5}/#{size}/#{def}",alt="avatar of #{name}")&attributes(attributes)
+
+mixin avatar( name, emailMd5, size )
+    //- a.avatar(href="/~#{user.name}")
+    div.avatar
+        +gravatar( emailMd5, name, size )
+        span.name= name
+
+mixin menu
+    div.navbar.navbar-fixed-top(role='navigation')&attributes(attributes)
+        div.container
+            div.navbar-header
+                a.navbar-brand(href="/",title="Main Link")
+                    img(src="/images/favicon.ico",alt="Forth Gesellschaft e.V.")
+                    span.hidden-xs
+                        | Forth e.V.
+                ul.navbar-nav
+                    each item in navigationTop
+                        +menuItem( item.link, "list-ul", item.name )
+                    //- if loggedIn
+                    //-     +menuItem("/profile",    "user",         {sm:"Me",all:"Profile"}     )
+                    //-     +menuItem("/logout",     "sign-out",     "Logout"    )
+                    //- else
+                    //-     +menuItem("/profile",    "sign-in",      {sm:"Login",all:"Login/Sign up"}     )
+                    //- +menuItem("/search",                    "search",       {sm:"",all:"Search"}   )
+
+mixin box
+    div.box&attributes(attributes)
+        div.container
+            block
+
+mixin article( article )
+    +box.article&attributes(attributes)
+        +avatar( article.userName, article.userEmailMd5, 64 )
+        .created= moment(article.created).format("DD.MM.YYYY")
+        h3= article.title
+        p!= article.intro.replace( /src="\/images\//g, 'src="http://forth-ev.de/images/' )
+        if article.body.length > 0
+            .expander(data-article=article.id)
+                +fa("angle-down")
+                span Mehr
+                +fa("angle-down")
+
+html
+    head
+        title
+            block title
+                = title || "Forth"
+        meta(name="viewport",content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width")
+        +favicon("/images/favicon.png?v=6")
+        +style('/css/index.css')
+        +style('/css/font-awesome.min.css')
+        +styles
+    body(class=bodyClass)
+        div.wrapper
+            block menu
+
+            div.main-content
+                block content
+
+        footer
+            div.container-fluid
+                div.row
+                    div.col-xs-4
+                        | powered by  
+                        a(href='https://github.com/GeraldWodni/kern.js',target="_blank") kern.js
+                    //-div.col-xs-4.text-center
+                    //-a(href="/todo") TODOs
+                    div.col-xs-8.text-right
+                        //a(href="http://wodni.at") 
+                        span.debug-size
+                            | ©
+                        | copyright 
+                        = (new Date()).getFullYear()
+                        |  Forth-Gesellschaft e.V.
+            div#bootstrapSize
+                div.visible-xs
+                div.visible-sm
+                div.visible-md
+                div.visible-lg
+        +script('/js/bootstrap.min.js')
+        +scripts

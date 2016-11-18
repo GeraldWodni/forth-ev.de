@@ -1,0 +1,14 @@
+//- Kategorie Haupttemplate: vererbt einen header und rendert alle Artikel
+
+extends layout
+
+block menu
+    +menu
+
+block content
+    +box.header
+        block header
+
+    each article in articles
+        +article(article)
+

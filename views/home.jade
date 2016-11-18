@@ -1,0 +1,21 @@
+//- (c)2016 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block content
+    +box.forth-ev
+        img(src="/images/forthEv.png")
+        h1 Forth-Gesellschaft e.V.
+        h2 Wir programmieren Forth
+            
+    +box.hot
+        each article in articlesHot
+            h2= article.title
+            p!= article.intro.replace( /src="\/images\//g, 'src="http://forth-ev.de/images/' )
+
+    each article in articles
+        +article(article)
+

@@ -1,0 +1,43 @@
+extends layout
+
+block menu
+    +menu
+
+block content
+
+    +box.forth
+        h2 Was ist Forth?
+        h1 Das Programmiersystem Forth
+        p Forth ist eine leistungsfähige Programmiersprache. Sie kommt sowohl zum Erstellen von Programmen für einfache Steuerrechner als auch für   Workstations und Großrechner zum Einsatz. Die Vielfalt von Applikationen   die mit ihr erstellt wurden umfasst u. a.  Tabellenkalkulationen, Experten-Systeme, verteilte Echtzeit-Steuerungen   und Datenbanken. Eine moderne Anwendung für Forth ist das Konzept der Open Firmware (IEEE-1275).
+        p Forth wurde 1969 von Charles Moore entworfen. Es verbreitete sich rasch   unter Mikroprozessor-Programmierern. Diese zunächst noch informelle   Forth-Gesellschaft brachte ihre Anregungen ein in die entstehende Forth   Interest Group (fig). So wurde 1977 ein erster Standard formuliert, das   Forth-77, und die fig gab modellhaft Implementationen für verschiedene   Prozessortypen heraus - das legendäre fig-Forth. Viele Forth-Systeme für   neuere Prozessoren sind aus dem fig-Forth hervorgegangen.
+        p 1994 wurde Forth als American National Standard formuliert, dem die Forth-Systeme nun oft entsprechen - <a href="http://www.taygeta.com/forth/dpans.htm">DPANS</a>. Eine Übersicht über die Entwicklung ist im <a href="http://www.complang.tuwien.ac.at/forth/family-tree/">Forth Familiy Tree</a> von Anton Ertl, TU Wien, zu sehen.
+        p Inzwischen gibt es den Entwurf für einen weiteren Forth-Standard, der   auf ANS Forth aufbaut, und neue Herausforderungen wie UTF-8 und   ähnliches löst, <a href="http://www.forth200x.org">Forth200x</a>.  Dieser Standard ist zur Zeit zur öffentlichen Begutachtung ausgelegt, der Prozess wird aber kontinuierlich weitergeführt.
+
+        h2 Konzepte
+        p Forth basiert auf dem Konzept einer Zwei-Stackmaschine. Jegliche Datenverarbeitung wird  auf dem sogenannten <em>Datenstack</em> ausgeführt; alle Forth-Operatoren   entnehmen ihm ihre Aufrufparameter und hinterlassen auf ihm die   Ergebnisse. Der Datenstack dient so zur Parameterübergabe zwischen den   Operatoren. Als Konsequenz dieser Arbeitsweise verwendet Forth eine   Postfix-Notation für die Reihenfolge von Parametern und Operatoren.
+
+        blockquote
+            h4 Beispiel:
+            code 3 5 + 7 * . &lt;cr&gt;<u> 56 ok&nbsp;</u>
+            p legt interaktiv zuerst die Zahl 3 auf den Stack und danach die Zahl 5    darauf. Das + (eine elementare Forth-Operation) wird aufgerufen, addiert    beide Werte und ersetzt sie auf dem Stack durch das Ergebnis (8). Nachfolgend    wird 7 auf den Stack gelegt und mittels * das Ergebnis    berechnet. Der Operator . gibt schließlich den obersten Stackeintrag auf dem Schirm als    Integerzahl aus. Mit dem abschließenden ok zeigt Forth an, dass die Zeile    verarbeitet und das System für neue Aufgaben bereit ist.
+        p Der zweite Stack, <em>Returnstack </em>genannt, speichert die Rückkehrinformationen bei  verschachteltem Aufruf von Unterprogrammen, d. h. sobald ein Forth-Wort weitere aufruft.
+        p Forth bietet eine interaktive Arbeitsweise bei Programmentwicklung und -test. Der  Quellcode besteht aus einzelnen Sequenzen, die durch einen Compiler zu Unterprogrammen,  genannt <em>Worte</em>, übersetzt werden. Neu erstellte Worte sind dem schon vorhandenen  Basiswortschatz eines Forth-Systems gleichgestellt und erweitern damit den verfügbaren  elementaren Wortschatz um leistungsfähigere und problembezogene Komponenten.
+        p Alle Worte lassen sich mit Parametern versehen (indem man diese auf dem Stack  bereitstellt), über einen Interpreter aufrufen  und die Ergebnisse inspizieren. Da  Compiler und Interpreter gemeinsamer Bestandteil eines Forth-Systems sind, erlaubt dies  einen sehr kurzen Edit-Compile-Test-Zyklus und ermutigt dadurch zu einer inkrementellen  Arbeitsweise, bei der jeweils einzelne Worte neu hinzugefügt und komplett ausgetestet  werden, ehe eine weitere Definition auf diesem Wort aufbaut. Ebenso kann man auf diese  Weise Hardwareeinheiten des Rechners per Kommando ansprechen, kurze Codesequenzen  austesten u. v. m. Dies erlaubt es, sich einem neuen unbekannten Problem (Hard- oder  Software) interaktiv zu nähern, mit ihm zu experimentieren.
+
+        blockquote
+            h4 Beispiel:
+            code : Quadrat ( n ¨C n^2 ) DUP * ;
+            p Hier wird mit dem : die Definition eines neuen Forth-Wortes eingeleitet.    Es erhält den Namen <em>Quadrat</em>. Der in Klammern stehende Kommentar drückt aus, daß    das Wort auf dem Stack eine Zahl <em>n</em> erwartet und deren Quadrat <em>n^2</em> hinterlässt. Die folgenden Worte bis zum die Definition beendenden ; werden    in das neue Forth-Wort kompiliert und bilden dessen Funktionalität.
+            p Das neue Forth-Wort läßt sich mit
+            code 7 Quadrat . &lt;cr&gt;<u> 49 ok </u>
+            p sofort auf korrekte Funktion testen und nachfolgend in weiteren Definitionen verwenden.
+        
+        h2 Arbeitsweise
+        p Intern werden Forth-Worte in einem Wörterbuch (<em>Dictionary</em>)  verwaltet. Dieses läßt sich thematisch in unterschiedliche Wortlisten (<em>Wordlists</em> oder <em>Vocabularies</em>) gliedern. Zu jedem Wort gehören sein Name, einige Statusflags  und je ein Verweis auf zugehörige Daten und auszuführenden Code.
+        p Forth arbeitet immer in einem von zwei Modi; Interpretation oder  Compilation. Ein Textinterpreter verarbeitet den Eingabestrom, der von   Tastatur oder einem  Massenspeicher kommt, und zerlegt ihn in eine Folge von durch   Leerzeichen getrennte  Zeichenketten. Diese Zeichenketten werden im Wörterbuch gesucht und im   Interpretermodus wird ihr zugehöriger Code aufgerufen. Zahleneingaben   werden entsprechend konvertiert und auf dem Stack abgelegt. Der : (<em>Colon</em>)   ist ein Forth-Wort wie alle  anderen; er legt jedoch einen neuen Wörterbucheintrag mit dem Namen des   neuen Wortes an und schaltet den Compilermodus ein. Nun werden für die   meisten Worte aus dem Eingabestrom entsprechende Aufrufe in das neu   angelegte Wort kompiliert. Demzufolge besteht ein kompiliertes   Forth-Wort aus einer Folge von Aufrufen anderer Wörter, die dann  entsprechend abgearbeitet werden.
+        p Einige Worte mit einem speziellen <em>Immediate</em>-Flag werden im  Compilermodus nicht kompiliert sondern statt dessen ausgeführt. Diese <em>Immediate</em>-Worte  sind Compiler-Hilfsworte, die dem Aufbau spezieller Sprachkonstrukte dienen. Ein IF  kompiliert z. B. eine entsprechende Sprungstruktur in das neue Wort. Das abschließende THEN  (in älteren Dialekten manchmal ENDIF) kann dann auf eine korrekte  Verschachtelung prüfen und Sprungziele auflösen. Ein weiteres <em>Immediate</em>-Wort ist  das ; welches die Definition beendet und das System zurück in den  Interpretermodus versetzt. Da der Programmierer selbst <em>Immediate</em>-Worte schreiben kann, hat er damit die Möglichkeit auch den Compiler selbst zu erweitern.
+        p Eine weitere Besonderheit sind Definitionsworte, die zur Erzeugung von  Datenstrukturen verwendet werden. Sie kombinieren einen CREATE-Teil,   in dem alle Aktionen beschrieben werden, die zum Anlegen der neuen   Datenstruktur erforderlich sind (Reservierung von Speicher,   Initialisierung, ...) mit einem DOES&gt;-Teil, in dem das Laufzeitverhalten der aller mit diesem Wort erzeugten Datenstrukturen beschrieben werden kann.
+        h2 Forth-Systeme
+        p Forth-Systeme existieren in unterschiedlichen Ausbaustufen.
+        p Vor allem in Steuerrechnern mit i.d.R. eingeschränkten Ressourcen, findet man oft recht einfache, kompakte Forth-Systeme, oft nur einige KiloByte groß. Sie  verfügen i.d.R. zumindest über einen Grundwortschatz sowie über Interpreter und  Compiler, was vor allem für Inbetriebnahme, Diagnose und Fehlersuche sehr nützlich ist.
+        p Ausgebaute Forth-Systeme verfügen darüber hinaus über eine Vielzahl  von Werkzeugen zur komfortablen Lösung auch komplexer Probleme. Dazu   gehören u.a. ein Maschinencode-Assembler zur Definition zeitkritischer   Routinen, ein Quelltexteditor,  Debugging-Werkzeuge oder gar ein Multitask-Scheduler. Derartige Systeme   erreichen leicht  einen Umfang von einigen hundert KiloByte und bieten dem anspruchsvollem   Nutzer eine  hervorragende Arbeitsbasis. 
