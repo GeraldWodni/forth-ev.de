@@ -18,6 +18,7 @@ $(function(){
     /* page-offset-loaders */
     function loadOnScroll(evt){
         var $this = $(this);
+        $this.unbind();
         var url =$this.attr("data-load-on-scroll");
         evt.preventDefault();
         $.get( url, function( res ) {
@@ -35,9 +36,19 @@ $(function(){
     }
     updateDom();
 
+    /* helper function, taken from: http://stackoverflow.com/questions/487073/check-if-element-is-visible-after-scrolling */
+    function isScrolledIntoView(el) {
+        var elemTop = el.getBoundingClientRect().top;
+        var elemBottom = el.getBoundingClientRect().bottom;
+
+        var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
+        return isVisible;
+    }
+
     /* detect end of page scroll */
-    //window.onscroll = function( evt ) {
-    //    if( window.innerHeight + window.scrollY >= document.body.offsetHeight )
-    //        $("[data-load-on-scroll]").trigger("click");
-    //}
+    window.onscroll = function( evt ) {
+        var $dataLoadOnScroll = $("[data-load-on-scroll]");
+        if( isScrolledIntoView( $dataLoadOnScroll.get(0) ) )
+            $dataLoadOnScroll.trigger("click");
+    }
 });
