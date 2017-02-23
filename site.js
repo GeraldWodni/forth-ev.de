@@ -138,8 +138,12 @@ module.exports = {
             },
             function( done ) {
                 /* catch all */
-                k.router.all("*", function( req, res ) {
-                    httpStatus( req, res, 404 );
+                k.router.all("*", function( req, res, next ) {
+                    /* allow admin */
+                    if( /^\/admin.*/.test( req.url ) )
+                        next();
+                    else
+                        httpStatus( req, res, 404 );
                 });
                 done();
             }
