@@ -32,12 +32,11 @@ mixin menu
                 ul.navbar-nav
                     each item in navigationTop
                         +menuItem( item.link, "list-ul", item.name )
-                    //- if loggedIn
-                    //-     +menuItem("/profile",    "user",         {sm:"Me",all:"Profile"}     )
-                    //-     +menuItem("/logout",     "sign-out",     "Logout"    )
-                    //- else
-                    //-     +menuItem("/profile",    "sign-in",      {sm:"Login",all:"Login/Sign up"}     )
-                    //- +menuItem("/search",                    "search",       {sm:"",all:"Search"}   )
+                    if loggedIn
+                        +menuItem("/profile",    "user",         {sm:"Me",all:"Profile"}     )
+                        +menuItem("/logout",     "sign-out",     "Logout"    )
+                    else
+                        +menuItem("/profile",    "sign-in",      {sm:"Login",all:"Login/Sign up"}     )
 
 
 if naked

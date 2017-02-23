@@ -44,6 +44,11 @@ module.exports = {
             });
         });
 
+        /* profile */
+        /* TODO: pass navigation information to login and profile renderers */
+        k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
+        k.useSiteModule( "/profile", "forth-ev.de", "profile.js" );
+
         /** rendering **/
 
         /* wrapper for layout queries + custom queries */
@@ -77,7 +82,7 @@ module.exports = {
             function( done ) {
                 /** categories **/
                 db.query( "SELECT * FROM navigation", function( err, data ) {
-                    if( err ) return console.log( err.red.bold );
+                    if( err ) return console.log( err.toString().red.bold );
 
                     /* register each navigation link first */
                     data.forEach( function( item ) {
