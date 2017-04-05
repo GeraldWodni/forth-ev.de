@@ -72,10 +72,18 @@ module.exports = {
             });
         });
 
-        /* profile */
-        /* TODO: pass navigation information to login and profile renderers */
+        /** profile **/
+        /* TODO: get renderUser from profile-module */
+        k.router.use( "/~:link", function( req, res, next ) {
+            k.requestman( req );
+            var userLink = req.requestman.id( "link" );
+
+            renderUser( userLink, req, res, next );
+        });
+
         k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
-        k.useSiteModule( "/profile", "forth-ev.de", "profile.js" );
+        k.useSiteModule( "/profile", "forth-ev.de", "profile.js", { setup: { vals: vals } } );
+
 
         /** rendering **/
 

@@ -5,3 +5,25 @@ extends layout
 block content
     .container
         h1 Profile
+        .row
+            .col-md-8
+                h2
+                    | Beiträge von
+                    = user.name
+                if manage
+                    a.btn.btn-default(href="/profile/change-password")
+                        i.fa.fa-key
+                        |  Change password
+
+                uls.fa-ul
+                    each article in articles
+                        li
+                            +fa("li fa fa-cube")
+                            //- TODO: create permanent URL
+                            a(href="/article/#{packet.name}")
+                                h3= packet.name
+            .col-md-4
+                h1.text-center
+                    +gravatar( user.emailMd5, user.name, 496 ).img-responsive
+                    = user.name
+
