@@ -18,8 +18,12 @@ module.exports = {
         var db = k.getDb();
 
         /* utlitiy */
-        function httpStatus( req, res, code, vals ) {
-            k.httpStatus( req, res, code, { values: vals } );
+        function httpStatus( req, res, code, values ) {
+            k.httpStatus( req, res, code, { values: values } );
+        }
+
+        function vals( req, values ) {
+            return values;
         }
 
         /* explicit static content */
@@ -41,6 +45,30 @@ module.exports = {
                 if( err ) return next( err );
                 if( data.length != 1 ) return httpStatus( req, res, 404 );
                 res.send( "<p>" + data[0].body + "</p>" );
+            });
+        });
+
+        /* finish user registration */
+        k.router.get("/confirm/:hash", function( req, res, next ) {
+            k.requestman( req );
+
+            var hash = req.requestman.alnum( "hash" );
+            k.users.confirmCreate( req.kern.website, hash, function( err, user ) {
+                if( err )
+                    if( err.message && err.message.indexOf( "Unknown hash" ) == 0 )
+                        return k.jade.render( req, res, "confirm", vals( req, { error: { title: "Unknown hash", text:"Please use your link provided your email (visiting this page twice will also trigger this message)." } } ) );
+                    else
+                        return next( err );
+
+                /* create sql user */
+                console.log( "CREATE USER:", user );
+                kData.users.create({
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                });
+
+                k.jade.render( req, res, "confirm" );
             });
         });
 
@@ -67,12 +95,12 @@ module.exports = {
                     if( err ) return next( err ); // handle errors directly
 
                     /* assign results */
-                    var vals = {}, i=0;
+                    var values = {}, i=0;
                     _.keys( callQueries ).forEach( function( key ) {
-                        vals[ key ] = data[ i++ ];
+                        values[ key ] = data[ i++ ];
                     });
                     /* perform callback */
-                    callback( req, res, vals );
+                    callback( req, res, values );
                 });
             });
         }
