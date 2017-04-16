@@ -45,6 +45,11 @@ module.exports = {
             k.jade.render( req, res, "changePassword", vals( req, { title: "Change Password" } ) );
         });
 
+        k.router.get("/articles/edit/:id", function( req, res ) {
+            k.requestman( req );
+            res.send( "EDIT:" + req.requestman.id() );
+        });
+
         /* render logged in user */
         k.router.get("/", function( req, res, next ) {
             renderUser( req.session.loggedInUsername, req, res, next );
