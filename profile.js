@@ -11,6 +11,7 @@ module.exports = {
         var vals = k.setupOpts.vals;
 
         var kData = k.getData();
+        var db = k.getDb();
 
         function renderUser( userLink, req, res, next ) {
             /* user */
@@ -45,9 +46,30 @@ module.exports = {
             k.jade.render( req, res, "changePassword", vals( req, { title: "Change Password" } ) );
         });
 
+        k.router.post("/articles/edit/:id", function( req, res, next ) {
+            k.requestman( req );
+            k.postman( req, res, function() {
+                db.query("UPDATE articles SET ? WHERE id=?", [{
+                    title: req.postman.text( "title" ),
+                    hot:   req.postman.exists( "hot" ),
+                    frontPage:   req.postman.exists( "frontPage" ),
+                    intro: req.postman.text( "intro" ),
+                    body: req.postman.text( "body" )
+                }, req.requestman.uint("id")], function( err ) {
+                    /* forward to get */
+                    req.method = "GET";
+                    next( err );
+                });
+            });
+        });
+
         k.router.get("/articles/edit/:id", function( req, res ) {
             k.requestman( req );
-            res.send( "EDIT:" + req.requestman.id() );
+            db.query("SELECT * FROM articles WHERE id=?", [ req.requestman.uint("id") ], function( err, data ) {
+                if( err ) return next( err );
+                if( data.length != 1 ) return httpStatus( req, res, 404 );
+                k.jade.render( req, res, "editArticle", vals( req, { article: data[0] } ) );
+            });
         });
 
         /* render logged in user */

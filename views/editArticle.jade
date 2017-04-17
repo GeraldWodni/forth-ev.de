@@ -1,0 +1,29 @@
+//- (c)2017 by Gerald Wodni
+
+extends layout
+
+block content
+    .container
+        h1 Artikel editieren
+
+        if error
+            div.alert.alert-danger
+                strong
+                    = error
+
+        if success
+            div.alert.alert-success
+                strong
+                    = success
+
+        form(method='post',role='form')
+            +text-field("title", "Titel", article.title)
+            +datetime-field("reveal", "Aufdecken", moment(article.reveal).sqlFormat())
+            +datetime-field("expires", "Ablaufdatum", moment(article.expires).sqlFormat())
+            +checkbox-field("hot", "Heiß - klebt immer ganz oben", article.hot)
+            +checkbox-field("frontPage", "Hauptseite - Wird auch auf der Startseite angezeigt", article.frontPage)
+            +textarea-field("intro", "Intro", article.intro)
+            +textarea-field("body", "Hauptteil - zum Ausklappen", article.body)
+            button.btn.btn-primary(type='submit',name='change',value='yes')=__("Change")
+            p
+
