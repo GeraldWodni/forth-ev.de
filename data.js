@@ -8,7 +8,7 @@ module.exports = {
             }
         } );
 
-        var navigation =  k.crud.sql( db, { table: "navigation",     key: "name", foreignName: "name",
+        var navigation =  k.crud.sql( db, { table: "navigation",     key: "id", foreignName: "name",
             foreignKeys: {
                 category:   { crud: categories }
             }
