@@ -20,7 +20,21 @@ module.exports = {
             }
         } );
 
+        var articles =  k.crud.sql( db, { table: "articles",     key: "id", foreignName: "title",
+            selectListQuery: { sql: "SELECT `articles`.`id`, `users`.`id` AS `user`, `users`.`name` AS `userName`, `articles`.`title`"
+                + "FROM `articles` INNER JOIN `users` ON `articles`.`user`=`users`.`id`"
+                + "ORDER BY `users`.`name`, `articles`.`title`"
+            },
+            foreignBoldName: "userName",
+            foreignNameSeparator: " / ",
+            foreignKeys: {
+                user:       { crud: users },
+                category:   { crud: categories }
+            }
+        } );
+
         return {
+            articles:       articles,
             categories:     categories,
             navigation:     navigation,
             users:          users

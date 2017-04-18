@@ -12,7 +12,7 @@ module.exports = {
 
             fields: {
                 id:         { name: "id",           filter: "id",   source: "requestData"                   },
-                oid:        { text: "=Alte ID (Importrestl, bitte nicht ändern)",    type: "text"           },
+                //oid:        { text: "=Alte ID (Importrestl, bitte nicht ändern)",    type: "text"           },
                 name:       { text: "=Name",        type: "text",   attributes: { required: true }          },
                 image:      { text: "=Bild",        type: "text"                                            },
                 newsCount:  { text: "=Newseinträge",type: "number", attributes: { min: 0, max: 100, step: 1 } }

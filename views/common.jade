@@ -18,7 +18,7 @@ mixin box
 mixin article( article )
     +box.article&attributes(attributes)
         if true
-            a(href="/profile/articles/edit/" + article.id).edit
+            a(href="/admin/articles/edit/" + article.id).edit
                 +fa("pencil")
         +avatar( article.userName, article.userEmailMd5, 64 )
         .created= moment(article.created).format("DD.MM.YYYY")
