@@ -84,6 +84,9 @@ module.exports = {
         k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
         k.useSiteModule( "/profile", "forth-ev.de", "profile.js", { setup: { vals: vals } } );
 
+        /** administration **/
+        k.reg("admin").addSiteModule( "categories", "forth-ev.de", "categories.js", "Categories", "th-large" );
+
 
         /** rendering **/
 
