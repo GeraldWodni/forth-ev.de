@@ -85,6 +85,7 @@ module.exports = {
         k.useSiteModule( "/profile", "forth-ev.de", "profile.js", { setup: { vals: vals } } );
 
         /** administration **/
+        k.reg("admin").addSiteModule( "navigation", "forth-ev.de", "navigation.js", "Navigation", "book" );
         k.reg("admin").addSiteModule( "categories", "forth-ev.de", "categories.js", "Categories", "th-large" );
 
 
