@@ -17,7 +17,7 @@ mixin box
 
 mixin article( article )
     +box.article&attributes(attributes)
-        if true
+        if loggedIn
             a(href="/admin/articles/edit/" + article.id).edit
                 +fa("pencil")
         +avatar( article.userName, article.userEmailMd5, 64 )

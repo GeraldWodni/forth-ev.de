@@ -18,7 +18,7 @@ module.exports = {
             console.log( "RENDER", userLink );
             kData.users.readWhere( "name", [ userLink ], function( err, users ) {
                 if( err ) return next( err );
-                if( users.length == 0 ) return httpStatus( req, res, 404 );
+                if( users.length == 0 ) return k.httpStatus( req, res, 404 );
 
                 var user = users[0];
                 k.jade.render( req, res, "profile", vals( req, { user: user, articles: [], manage: req.session && user.name==req.session.loggedInUsername, title: user.name } ) );

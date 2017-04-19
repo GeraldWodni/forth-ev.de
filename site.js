@@ -23,8 +23,16 @@ module.exports = {
         }
 
         function vals( req, values ) {
-            return values;
+            return _.extend( values, {
+                loggedIn: "session" in req
+            });
         }
+
+        k.router.get("/logout", function( req, res ) {
+            req.sessionInterface.destroy( req, res, function() {
+                k.jade.render( req, res, "logout" );
+            });
+        });
 
         /* explicit static content */
         k.router.get("/favicon.ico", k.serveStaticFile( "images/favicon.ico" ) );
@@ -149,7 +157,7 @@ module.exports = {
                             provide( "get", "/ajax/articles/offset" + item.link + "/:offset", { queries: queries },
                             function( req, res, data )  {
                                 var offset = req.requestman ? parseInt(req.requestman.uint( "offset" )||"0") : 0;
-                                k.jade.render( req, res, file.name, _.extend( data, { naked: true, link: item.link, offset: offset } ) );
+                                k.jade.render( req, res, file.name, vals( req, _.extend( data, { naked: true, link: item.link, offset: offset } ) ) );
                             });
 
 
@@ -158,7 +166,7 @@ module.exports = {
                             switch( file.ext ) {
                                 case ".jade":
                                     var offset = req.requestman ? parseInt(req.requestman.uint( "offset" )||"0") : 0;
-                                    k.jade.render( req, res, file.name, _.extend( data, { link: item.link, bodyClass: item.class, offset: offset } ) );
+                                    k.jade.render( req, res, file.name, vals( req, _.extend( data, { link: item.link, bodyClass: item.class, offset: offset } ) ) );
                                     break;
                                 default:
                                     httpStatus( req, res, 501, { title: "Unknown file-extension", text: "File-extension " + file.ext + " is not handled by site-provider" } );
@@ -178,7 +186,7 @@ module.exports = {
                             + "  FROM articles INNER JOIN users ON articles.user=users.id"
                             + "  WHERE frontPage AND expires > NOW() ORDER BY created DESC LIMIT 10"
                 } }, function( req, res, data ) {
-                    k.jade.render( req, res, "home", _.extend( data, { bodyClass: "home" } ) );
+                    k.jade.render( req, res, "home", _.extend( data, vals( req, { bodyClass: "home" } ) ) );
                 });
                 done();
             },
