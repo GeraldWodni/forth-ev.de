@@ -10,6 +10,8 @@ module.exports = {
             title: "Articles",
             path: "/admin/articles",
 
+            scripts: ["/js/ace-min/ace.js","/js/articles.js"],
+
             fields: {
                 id:         { name: "id",           filter: "id",   source: "requestData"                   },
                 //oid:        { text: "=Alte ID (Importrestl, bitte nicht ändern)",    type: "text"         },
