@@ -2,7 +2,10 @@
 // (c)copyright 2015 by Gerald Wodni <gerald.wodni@gmail.com>
 "use strict";
 
+var md5     = require('md5');
 var _       = require('underscore');
+
+var renderUser;
 
 module.exports = {
     setup: function( k ) {
@@ -13,7 +16,7 @@ module.exports = {
         var kData = k.getData();
         var db = k.getDb();
 
-        function renderUser( userLink, req, res, next ) {
+        renderUser = function _renderUser( userLink, req, res, next ) {
             /* user */
             console.log( "RENDER", userLink );
             kData.users.readWhere( "name", [ userLink ], function( err, users ) {
@@ -21,17 +24,19 @@ module.exports = {
                 if( users.length == 0 ) return k.httpStatus( req, res, 404 );
 
                 var user = users[0];
-                k.jade.render( req, res, "profile", vals( req, { user: user, articles: [], manage: req.session && user.name==req.session.loggedInUsername, title: user.name } ) );
+                user.emailMd5 = md5( user.email );
+
+                //k.jade.render( req, res, "profile", vals( req, { user: user, articles: [], manage: req.session && user.name==req.session.loggedInUsername, title: user.name } ) );
 
                 /* user's articles */
-                //kData.articles.readWhere( "user", [ user.id ], function( err, packages ) {
-                //    if( err ) return next( err );
+                kData.articles.readWhere( "user", [ user.id ], function( err, articles ) {
+                    if( err ) return next( err );
 
                 //    user.emailMd5 = md5( user.email );
-                //    k.jade.render( req, res, "user", vals( req, { user: user, articles: articles, manage: req.session && user.name==req.session.loggedInUsername, title: user.name } ) );
-                //});
+                    k.jade.render( req, res, "profile", vals( req, { user: user, articles: articles, manage: req.session && user.name==req.session.loggedInUsername, title: user.name } ) );
+                });
             });
-        }
+        };
 
         /* change password */
         k.router.post("/change-password", function( req, res, next ) {
@@ -47,8 +52,28 @@ module.exports = {
         });
 
         /* update profile details */
-        k.router.get("/edit", function( req, res ) {
-            k.jade.render( req, res, "editProfile", vals( req, { title: "Profile editieren" } ) );
+	function renderEditProfile( req, res, next ) {
+            db.query("SELECT details FROM users WHERE name=?", [req.session.loggedInUsername ], function( err, data ) {
+                if( err ) return next( err );
+                if( data.length != 1 ) return k.httpStatus( req, res, 404 );
+
+                k.jade.render( req, res, "editProfile", vals( req, { title: "Profile editieren", user: data[0] } ) );
+            });
+	}
+        k.router.post("/edit", function( req, res, next ) {
+            k.postman( req, res, function() {
+                db.query("UPDATE users SET details=? WHERE name=?", [
+                    req.postman.text("details"),
+                    req.session.loggedInUsername
+                ], function( err ) {
+                    if( err ) return next( err );
+                    renderEditProfile( req, res, next );
+                });
+            });
+        });
+
+        k.router.get("/edit", function( req, res, next ) {
+	    renderEditProfile( req, res, next );
         });
 
         k.router.post("/articles/edit/:id", function( req, res, next ) {
@@ -82,5 +107,6 @@ module.exports = {
             renderUser( req.session.loggedInUsername, req, res, next );
         });
 
-    }
+    },
+    renderUser: function() { renderUser.apply( this, arguments ); }
 };

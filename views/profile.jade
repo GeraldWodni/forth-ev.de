@@ -2,13 +2,20 @@
 
 extends layout
 
+//- block menu
+//-     +menu
+
 block content
     .container
-        h1 Profile
+        h1 Profil
         .row
             .col-md-8
+                if user.details
+                    div.details
+                        != marked( user.details )
+
                 h2
-                    | Beiträge von
+                    | Beiträge von 
                     = user.name
                 if manage
                     a.btn.btn-default(href="/profile/edit")
@@ -22,10 +29,10 @@ block content
                 uls.fa-ul
                     each article in articles
                         li
-                            +fa("li fa fa-cube")
+                            +fa("li fa fa-file-text")
                             //- TODO: create permanent URL
-                            a(href="/article/#{packet.name}")
-                                h3= packet.name
+                            a(href="/article/#{article.name}")
+                                h3= article.title
             .col-md-4
                 h1.text-center
                     +gravatar( user.emailMd5, user.name, 496 ).img-responsive

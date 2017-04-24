@@ -81,16 +81,17 @@ module.exports = {
         });
 
         /** profile **/
+        k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
+        k.useSiteModule( "/profile", "forth-ev.de", "profile.js", { setup: { vals: vals }, register: "profile" } );
+
         /* TODO: get renderUser from profile-module */
+        var renderUser = k.reg("profile").renderUser;
         k.router.use( "/~:link", function( req, res, next ) {
             k.requestman( req );
             var userLink = req.requestman.id( "link" );
 
             renderUser( userLink, req, res, next );
         });
-
-        k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
-        k.useSiteModule( "/profile", "forth-ev.de", "profile.js", { setup: { vals: vals } } );
 
         /** administration **/
         k.reg("admin").addSiteModule( "navigation", "forth-ev.de", "navigation.js", "Navigation",   "book"      );

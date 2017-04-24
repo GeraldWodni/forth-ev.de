@@ -30,6 +30,9 @@ module.exports = {
             foreignKeys: {
                 user:       { crud: users },
                 category:   { crud: categories }
+            },
+            wheres: {
+                "user": { where: "`user`=?" }
             }
         } );
 

@@ -17,7 +17,7 @@ block content
                     = success
 
         form(method='post',role='form')
-            +textarea-field("details", "Details - Erzähl etwas von dir, verlinke deine Profile (verwendet Markdown)", "")
+            +textarea-field("details", "Details - Erzähl etwas von dir, verlinke deine Profile (verwendet Markdown)", user.details)
             button.btn.btn-primary(type='submit',name='change',value='yes')=__("Change")
             p
 
