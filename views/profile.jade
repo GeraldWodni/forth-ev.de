@@ -11,9 +11,13 @@ block content
                     | Beiträge von
                     = user.name
                 if manage
+                    a.btn.btn-default(href="/profile/edit")
+                        i.fa.fa-user
+                        |  Profil editieren
+                    |  
                     a.btn.btn-default(href="/profile/change-password")
                         i.fa.fa-key
-                        |  Change password
+                        |  Passwort ändern
 
                 uls.fa-ul
                     each article in articles

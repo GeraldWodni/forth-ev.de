@@ -46,6 +46,11 @@ module.exports = {
             k.jade.render( req, res, "changePassword", vals( req, { title: "Change Password" } ) );
         });
 
+        /* update profile details */
+        k.router.get("/edit", function( req, res ) {
+            k.jade.render( req, res, "editProfile", vals( req, { title: "Profile editieren" } ) );
+        });
+
         k.router.post("/articles/edit/:id", function( req, res, next ) {
             k.requestman( req );
             k.postman( req, res, function() {
