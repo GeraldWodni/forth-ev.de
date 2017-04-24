@@ -2,19 +2,14 @@
 
 extends layout
 
+block menu
+    +menu
+
 block content
     .container
         h1 Profil editieren
 
-        if error
-            div.alert.alert-danger
-                strong
-                    = error
-
-        if success
-            div.alert.alert-success
-                strong
-                    = success
+        +messages(messages)
 
         form(method='post',role='form')
             +textarea-field("details", "Details - Erzähl etwas von dir, verlinke deine Profile (verwendet Markdown)", user.details)

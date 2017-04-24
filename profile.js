@@ -49,12 +49,12 @@ module.exports = {
         });
 
         /* update profile details */
-	function renderEditProfile( req, res, next ) {
+	function renderEditProfile( req, res, next, values ) {
             db.query("SELECT details FROM users WHERE name=?", [req.session.loggedInUsername ], function( err, data ) {
                 if( err ) return next( err );
                 if( data.length != 1 ) return k.httpStatus( req, res, 404 );
 
-                k.jade.render( req, res, "editProfile", vals( req, { title: "Profile editieren", user: data[0] } ) );
+                renderVals( req, res, next, "editProfile", _.extend( { title: "Profile editieren", user: data[0] }, values ) );
             });
 	}
         k.router.post("/edit", function( req, res, next ) {
@@ -64,7 +64,7 @@ module.exports = {
                     req.session.loggedInUsername
                 ], function( err ) {
                     if( err ) return next( err );
-                    renderEditProfile( req, res, next );
+                    renderEditProfile( req, res, next, { messages: [ { type: "success", title: "Erfolg", text: "Profil geändert"} ] } );
                 });
             });
         });
