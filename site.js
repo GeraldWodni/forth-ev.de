@@ -28,6 +28,19 @@ module.exports = {
             });
         }
 
+        function renderVals( req, res, next, view, values ) {
+            kData.navigation.readWhere( "top", [], function( err, navigationTop ) {
+                if( err ) return next( err );
+                kData.navigation.readWhere( "bottom", [], function( err, navigationBottom ) {
+                    if( err ) return next( err );
+                    k.jade.render( req, res, view, vals( req, _.extend( values, {
+                        navigationTop: navigationTop,
+                        navigationBottom: navigationBottom
+                    })) );
+                });
+            });
+        }
+
         k.router.get("/logout", function( req, res ) {
             req.sessionInterface.destroy( req, res, function() {
                 k.jade.render( req, res, "logout" );
@@ -82,7 +95,7 @@ module.exports = {
 
         /** profile **/
         k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
-        k.useSiteModule( "/profile", "forth-ev.de", "profile.js", { setup: { vals: vals }, register: "profile" } );
+        k.useSiteModule( "/profile", "forth-ev.de", "profile.js", { setup: { vals: vals, renderVals: renderVals }, register: "profile" } );
 
         /* TODO: get renderUser from profile-module */
         var renderUser = k.reg("profile").renderUser;

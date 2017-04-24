@@ -12,13 +12,13 @@ module.exports = {
 
         /* default jade value helper */
         var vals = k.setupOpts.vals;
+        var renderVals = k.setupOpts.renderVals;
 
         var kData = k.getData();
         var db = k.getDb();
 
         renderUser = function _renderUser( userLink, req, res, next ) {
             /* user */
-            console.log( "RENDER", userLink );
             kData.users.readWhere( "name", [ userLink ], function( err, users ) {
                 if( err ) return next( err );
                 if( users.length == 0 ) return k.httpStatus( req, res, 404 );
@@ -26,14 +26,11 @@ module.exports = {
                 var user = users[0];
                 user.emailMd5 = md5( user.email );
 
-                //k.jade.render( req, res, "profile", vals( req, { user: user, articles: [], manage: req.session && user.name==req.session.loggedInUsername, title: user.name } ) );
-
                 /* user's articles */
                 kData.articles.readWhere( "user", [ user.id ], function( err, articles ) {
                     if( err ) return next( err );
 
-                //    user.emailMd5 = md5( user.email );
-                    k.jade.render( req, res, "profile", vals( req, { user: user, articles: articles, manage: req.session && user.name==req.session.loggedInUsername, title: user.name } ) );
+                    renderVals( req, res, next, "profile", { user: user, articles: articles, manage: req.session && user.name==req.session.loggedInUsername, title: user.name } );
                 });
             });
         };
