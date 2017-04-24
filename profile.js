@@ -73,32 +73,6 @@ module.exports = {
 	    renderEditProfile( req, res, next );
         });
 
-        k.router.post("/articles/edit/:id", function( req, res, next ) {
-            k.requestman( req );
-            k.postman( req, res, function() {
-                db.query("UPDATE articles SET ? WHERE id=?", [{
-                    title: req.postman.text( "title" ),
-                    hot:   req.postman.exists( "hot" ),
-                    frontPage:   req.postman.exists( "frontPage" ),
-                    intro: req.postman.text( "intro" ),
-                    body: req.postman.text( "body" )
-                }, req.requestman.uint("id")], function( err ) {
-                    /* forward to get */
-                    req.method = "GET";
-                    next( err );
-                });
-            });
-        });
-
-        k.router.get("/articles/edit/:id", function( req, res ) {
-            k.requestman( req );
-            db.query("SELECT * FROM articles WHERE id=?", [ req.requestman.uint("id") ], function( err, data ) {
-                if( err ) return next( err );
-                if( data.length != 1 ) return httpStatus( req, res, 404 );
-                k.jade.render( req, res, "editArticle", vals( req, { article: data[0] } ) );
-            });
-        });
-
         /* render logged in user */
         k.router.get("/", function( req, res, next ) {
             renderUser( req.session.loggedInUsername, req, res, next );

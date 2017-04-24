@@ -105,6 +105,18 @@ module.exports = {
 
             renderUser( userLink, req, res, next );
         });
+        k.router.use( "/users", function( req, res, next ) {
+            kData.users.readAll( function( err, users ) {
+                if( err )
+                    return next( err );
+
+                users.forEach( function( user ) {
+                    user.emailMd5 = md5( user.email );
+                });
+
+                renderVals( req, res, next, "users", { users: users, title: "Benutzer" });
+            });
+        });
 
         /** administration **/
         k.reg("admin").addSiteModule( "navigation", "forth-ev.de", "navigation.js", "Navigation",   "book"      );
@@ -139,6 +151,26 @@ module.exports = {
                 });
             });
         }
+
+        /* single article */
+        /* TODO: use proper permalinks here instead of IDs! */
+        k.router.get("/articles/id/:id", function( req, res, next ) {
+            k.requestman(req);
+            kData.articles.read( req.requestman.id(), function( err, article ) {
+                if( err ) return next( err );
+                if( article.length === 0 ) return k.httpStatus( req, res, 404 );
+
+                kData.users.read( article.user, function( err, user ) {
+                    if( err ) return next( err );
+                    if( article.length === 0 ) return k.httpStatus( req, res, 404 );
+
+                    article.userEmailMd5 = md5( user.email );
+                    article.userName = user.name;
+
+                    renderVals( req, res, next, "singleArticle", { article: article } );
+                });
+            });
+        });
 
         /* setup routes for dynamic content; async is used to make sure home and catchall do not register too soon */
         async.series([

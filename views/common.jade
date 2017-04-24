@@ -5,8 +5,7 @@ mixin gravatar( emailMd5, name, size, def )
     img(src="/proxy/gravatar/#{emailMd5}/#{size}/#{def}",alt="avatar of #{name}")&attributes(attributes)
 
 mixin avatar( name, emailMd5, size )
-    //- a.avatar(href="/~#{user.name}")
-    div.avatar
+    a.avatar(href="/~#{name}")
         +gravatar( emailMd5, name, size )
         span.name= name
 
