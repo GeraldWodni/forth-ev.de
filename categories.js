@@ -11,7 +11,7 @@ module.exports = {
             path: "/admin/categories",
 
             fields: {
-                id:         { name: "id",           filter: "id",   source: "requestData"                   },
+                id:         { name: "id",           filter: "id",   source: "requestman"                    },
                 //oid:        { text: "=Alte ID (Importrestl, bitte nicht ändern)",    type: "text"           },
                 name:       { text: "=Name",        type: "text",   attributes: { required: true }          },
                 image:      { text: "=Bild",        type: "text"                                            },

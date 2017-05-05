@@ -13,7 +13,7 @@ module.exports = {
             scripts: ["/js/ace-min/ace.js","/js/articles.js"],
 
             fields: {
-                id:         { name: "id",           filter: "id",   source: "requestData"                   },
+                id:         { name: "id",           filter: "id",   source: "requestman"                    },
                 //oid:        { text: "=Alte ID (Importrestl, bitte nicht ändern)",    type: "text"         },
                 user:       { text: "User",         type: "foreign"                                         },
                 title:      { text: "Title",        type: "text",   attributes: { required: true }          },

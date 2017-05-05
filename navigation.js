@@ -11,9 +11,9 @@ module.exports = {
             path: "/admin/navigation",
 
             fields: {
-                id:         { name: "id",           filter: "id",   source: "requestData"                   },
-                name:       { text: "Name",         type: "text",   filter: "id",   attributes: { required: true } },
-                link:       { text: "Link",         type: "text"                                            },
+                id:         { name: "id",           filter: "id",   source: "requestman"                    },
+                name:       { text: "Name",         type: "text",   attributes: { required: true }          },
+                link:       { text: "Link",         type: "text",   filter: "link",   attributes: { required: true } },
                 class:      { text: "CSS-Class",    type: "text"                                            },
                 position:   { text: "Position",     type: "enum", keys: [ "top", "bottom" ]                 },
                 category:   { text: "Category",     type: "foreign"                                         },
