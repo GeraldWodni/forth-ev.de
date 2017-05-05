@@ -194,7 +194,7 @@ module.exports = {
                                 return { articles: mysql.format( 
                                        "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName"
                                     + " FROM articles INNER JOIN users ON articles.user=users.id"
-                                    + " WHERE category=? ORDER BY created DESC LIMIT ?,10", [ item.category, offset ] )
+                                    + " WHERE category=? AND reveal < NOW() ORDER BY reveal DESC LIMIT ?,10", [ item.category, offset ] )
                                 }
                             }
 
@@ -230,7 +230,7 @@ module.exports = {
                     "articlesHot": "SELECT * FROM articles WHERE hot",
                     "articles": "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName"
                             + "  FROM articles INNER JOIN users ON articles.user=users.id"
-                            + "  WHERE frontPage AND expires > NOW() ORDER BY created DESC LIMIT 10"
+                            + "  WHERE frontPage AND expires > NOW() AND reveal < NOW() AND NOT hot ORDER BY reveal DESC LIMIT 10"
                 } }, function( req, res, data ) {
                     k.jade.render( req, res, "home", _.extend( data, vals( req, { bodyClass: "home" } ) ) );
                 });
