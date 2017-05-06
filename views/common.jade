@@ -20,9 +20,10 @@ mixin article( article )
             a(href="/admin/articles/edit/" + article.id).edit
                 +fa("pencil")
         +avatar( article.userName, article.userEmailMd5, 64 )
-        .created= moment(article.created).format("DD.MM.YYYY")
+        .created= moment(article.reveal).format("DD.MM.YYYY")
         h3= article.title
-        p!= article.intro.replace( /src="\/images\//g, 'src="http://forth-ev.de/images/' )
+        - var intro = article.type == "markdown" ? marked( article.intro ) : article.intro
+        p!= intro.replace( /src="\/images\//g, 'src="http://forth-ev.de/images/' )
         if article.body.length > 0
             .expander(data-article=article.id)
                 +fa("angle-down")

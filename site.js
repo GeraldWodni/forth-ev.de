@@ -65,7 +65,10 @@ module.exports = {
             db.query("SELECT body FROM articles WHERE id=?", [ req.requestman.uint("id") ], function( err, data ) {
                 if( err ) return next( err );
                 if( data.length != 1 ) return httpStatus( req, res, 404 );
-                res.send( "<p>" + data[0].body + "</p>" );
+                var body = data[0].body;
+                if( data[0].type == "markdown" )
+                    body = marked( body );
+                res.send( "<p>" + body + "</p>" );
             });
         });
 
