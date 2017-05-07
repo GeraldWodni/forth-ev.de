@@ -49,17 +49,18 @@ module.exports = {
         });
 
         /* update profile details */
-	function renderEditProfile( req, res, next, values ) {
-            db.query("SELECT details FROM users WHERE name=?", [req.session.loggedInUsername ], function( err, data ) {
+        function renderEditProfile( req, res, next, values ) {
+            db.query("SELECT email, details FROM users WHERE name=?", [req.session.loggedInUsername ], function( err, data ) {
                 if( err ) return next( err );
                 if( data.length != 1 ) return k.httpStatus( req, res, 404 );
 
                 renderVals( req, res, next, "editProfile", _.extend( { title: "Profile editieren", user: data[0] }, values ) );
             });
-	}
+        }
         k.router.post("/edit", function( req, res, next ) {
             k.postman( req, res, function() {
-                db.query("UPDATE users SET details=? WHERE name=?", [
+                db.query("UPDATE users SET email=?, details=? WHERE name=?", [
+                    req.postman.email(),
                     req.postman.text("details"),
                     req.session.loggedInUsername
                 ], function( err ) {
@@ -70,7 +71,7 @@ module.exports = {
         });
 
         k.router.get("/edit", function( req, res, next ) {
-	    renderEditProfile( req, res, next );
+            renderEditProfile( req, res, next );
         });
 
         /* render logged in user */
