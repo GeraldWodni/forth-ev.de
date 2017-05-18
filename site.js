@@ -96,6 +96,9 @@ module.exports = {
             });
         });
 
+        /** wiki proxy **/
+        k.useSiteModule( "/wiki", "forth-ev.de", "wikiProxy.js", { setup: { vals: vals, renderVals: renderVals } } );
+
         /** profile **/
         k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
         k.useSiteModule( "/profile", "forth-ev.de", "profile.js", { setup: { vals: vals, renderVals: renderVals }, register: "profile" } );
