@@ -31,7 +31,7 @@ mixin menu
                         | Forth e.V.
                 ul.navbar-nav
                     each item in navigationTop
-                        +menuItem( item.link, "list-ul", item.name )
+                        +menuItem( item.link, item.icon, item.name )
                     if loggedIn
                         +menuItem("/profile",    "user",         "Profile"   )
                         +menuItem("/logout",     "sign-out",     "Logout"    )

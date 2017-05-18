@@ -14,6 +14,7 @@ module.exports = {
                 id:         { name: "id",           filter: "id",   source: "requestman"                    },
                 name:       { text: "Name",         type: "text",   attributes: { required: true }          },
                 link:       { text: "Link",         type: "text",   filter: "link",   attributes: { required: true } },
+                icon:       { text: "Icon",         type: "text",   filter: "link"                          },
                 class:      { text: "CSS-Class",    type: "text"                                            },
                 position:   { text: "Position",     type: "enum", keys: [ "top", "bottom" ]                 },
                 category:   { text: "Category",     type: "foreign"                                         },
