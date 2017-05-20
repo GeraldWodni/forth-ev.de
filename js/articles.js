@@ -18,6 +18,7 @@ $(document).ready(function(){
         var editor = ace.edit(aceId);
         editor.getSession().setTabSize(4);
         editor.getSession().setUseSoftTabs(true);
+        editor.getSession().setUseWrapMode(true);
         editor.setTheme("ace/theme/github");
 
         /* bind ace changed to textarea */
