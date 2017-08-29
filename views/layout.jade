@@ -31,7 +31,10 @@ mixin menu
                         | Forth e.V.
                 ul.navbar-nav
                     each item in navigationTop
-                        +menuItem( item.link, item.icon, item.name )
+                        if item.link.indexOf( "wiki" ) != -1
+                            +menuItem( "/wiki", "book", "Wiki" )
+                        else
+                            +menuItem( item.link, item.icon, item.name )
                     if loggedIn
                         +menuItem("/profile",    "user",         "Profile"   )
                         +menuItem("/logout",     "sign-out",     "Logout"    )
@@ -57,8 +60,9 @@ else
             div.wrapper
                 block menu
 
-                div.main-content
-                    block content
+                block full-content
+                    div.main-content
+                        block content
 
             footer
                 div.container-fluid

@@ -11,7 +11,5 @@ append scripts
 append head
     != wiki.links
 
-block content
-    +box.wiki
-        div(style="border:1px solid red")
-            != wiki.html
+block full-content
+    != wiki.html

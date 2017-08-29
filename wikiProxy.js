@@ -32,6 +32,9 @@ function mangleWiki( path, html ) {
         $(this).attr("action", proxyPrefix + $(this).attr("action").substr("/doku.php".length));
     });
 
+    /* remove start logo */
+    $("#dokuwiki__header div.headings.group h1 a img").remove();
+
     /* move header content, then delete it */
     var links = "";
     $("head link").each( function() {
@@ -51,7 +54,12 @@ function mangleWiki( path, html ) {
         $link.attr( "href", href );
         links += $.html( $link ) + "\n";
     });
-    var scripts = $.html( $("head script") );
+    var scripts = $.html( $("head script").each(function() {
+            var $script = $(this);
+            if( $script.attr("src") )
+                $script.attr("src", $script.attr("src").replace(/^\/lib\//g, "/wiki/res/lib/") );
+        })
+    );
 
     return {
         html: $("body").html(),
@@ -71,6 +79,48 @@ module.exports = {
         k.router.get("/res/*", function( req, res, next ) {
             var resUrl = wikiPrefix + url.parse( req.url ).path.substr(4);
             console.log( "RES:", resUrl );
+            https.get( resUrl, function( httpRes ) {
+                if( resUrl.indexOf( "css.php?t=dokuwiki" ) > 0 ) {
+                    /* consume and mangle */
+                    var cssContent = "";
+
+                    _.each( httpRes.headers, function( value, name ) {
+                        if( name.toLowerCase() != "content-length" )
+                            res.setHeader( name, value );
+                    });
+
+                    httpRes.on("data", function( data ) { cssContent += data; } );
+                    httpRes.on("end", function() {
+                        /* mangle CSS */
+                        cssContent = cssContent
+                        /* remove body-styles */
+                        .replace( /(body{[^}]+})/g, function( m ) {
+                            return "";
+                        })
+                        /* redirect lib request */
+                        .replace( /url\(\/lib\//g, "url(/wiki/res/lib/" )
+                        /* prefix style in #dokuwiki__site */
+                        .replace( /([{}])([-_>.,:# \[\]a-zA-Z0-9]+){/g, function( m, prefix, name ) {
+                            if( m.indexOf( "#dokuwiki__site" ) >= 0 )
+                                /* skip, already cxontained */
+                                return m;
+                            else
+                                /* prefix (also prefix comma-separated list */
+                                return prefix + "\n#dokuwiki__site " + name.replace(/,/g, ",#dokuwiki__site ") + "{";
+                        });
+
+                        res.end( cssContent );
+                    });
+                }
+                else
+                    /* just pipe request */
+                    httpRes.pipe( res );
+            });
+        });
+
+        k.router.get("/lib/*", function( req, res, next ) {
+            var resUrl = wikiPrefix + url.parse( req.url ).path.substr(4);
+            console.log( "LIB:", resUrl );
             https.get( resUrl, function( httpRes ) {
                 httpRes.pipe( res );
             });
@@ -94,7 +144,7 @@ module.exports = {
                     httpRes.on( "data", function( data ) { httpContent += data; });
                     httpRes.on( "end", function() {
                         var wiki = mangleWiki( wikiPath, httpContent );
-                        renderVals( req, res, next, "wiki", { wiki, manage: req.session && user.name==req.session.loggedInUsername, title: wiki.title } );
+                        renderVals( req, res, next, "wiki", { wiki, title: wiki.title } );
                     });
                 });
 
