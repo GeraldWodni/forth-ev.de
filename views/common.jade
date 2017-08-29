@@ -23,7 +23,7 @@ mixin article( article )
         .created= moment(article.reveal).format("DD.MM.YYYY")
         h3= article.title
         - var intro = article.type == "markdown" ? marked( article.intro ) : article.intro
-        p!= intro.replace( /src="\/images\//g, 'src="http://forth-ev.de/images/' )
+        p!= intro.replace( /src="\/images\//g, 'src="https://forth-ev.de/images/' )
         if article.body.length > 0
             .expander(data-article=article.id)
                 +fa("angle-down")
