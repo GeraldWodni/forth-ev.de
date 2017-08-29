@@ -48,7 +48,7 @@ $(function(){
     /* detect end of page scroll */
     window.onscroll = function( evt ) {
         var $dataLoadOnScroll = $("[data-load-on-scroll]");
-        if( isScrolledIntoView( $dataLoadOnScroll.get(0) ) )
+        if( $dataLoadOnScroll.length > 0 && isScrolledIntoView( $dataLoadOnScroll.get(0) ) )
             $dataLoadOnScroll.trigger("click");
     }
 });

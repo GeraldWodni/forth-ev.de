@@ -52,6 +52,7 @@ else
             +style('/css/index.css')
             +style('/css/font-awesome.min.css')
             +styles
+            block head
         body(class=bodyClass)
             div.wrapper
                 block menu
@@ -81,3 +82,4 @@ else
                     div.visible-lg
             +script('/js/bootstrap.min.js')
             +scripts
+            block scripts

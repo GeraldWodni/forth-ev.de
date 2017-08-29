@@ -5,7 +5,13 @@ extends layout
 block menu
     +menu
 
+append scripts
+    != wiki.scripts
+
+append head
+    != wiki.links
+
 block content
     +box.wiki
         div(style="border:1px solid red")
-            != wikiContent
+            != wiki.html
