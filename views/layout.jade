@@ -32,9 +32,8 @@ mixin menu
                 ul.navbar-nav
                     each item in navigationTop
                         if item.link.indexOf( "wiki" ) != -1
-                            +menuItem( "/wiki", "book", "Wiki" )
-                        else
-                            +menuItem( item.link, item.icon, item.name )
+                            - item.link = "/wiki"
+                        +menuItem( item.link, item.icon, item.name )
                     if loggedIn
                         +menuItem("/profile",    "user",         "Profile"   )
                         +menuItem("/logout",     "sign-out",     "Logout"    )
