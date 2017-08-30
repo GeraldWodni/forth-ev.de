@@ -151,7 +151,8 @@ module.exports = {
             console.log( wikiPath, req.method );
 
             function performRequest( opts ) {
-                var reqOpts = _.extend({
+                opts = opts || {};
+                var reqOpts = {
                     hostname: wikiHost,
                     path: "/doku.php" + wikiPath,
                     port: 443,
@@ -164,7 +165,7 @@ module.exports = {
                         "accept-encoding",
                         "accept-language"
                     )
-                }, opts.requestOpts );
+                };
 
                 var httpReq = https.request( reqOpts, ( httpRes ) => {
                     var httpContent = "";
