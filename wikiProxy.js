@@ -17,6 +17,11 @@ function mangleWiki( path, html ) {
     /* get header info, then remove header */
     var title = $("title").text();
 
+    /* rewrite wiki videos */
+    $("video[src^='/']").each(function() {
+        $(this).attr("src", "/wiki/res" + $(this).attr("src"));
+    });
+
     /* rewrite wiki-lokal images */
     $("img[src^='/']").each(function() {
         $(this).attr("src", wikiPrefix + $(this).attr("src"));
@@ -25,6 +30,9 @@ function mangleWiki( path, html ) {
     /* rewrite internal links */
     $("a[href^='/doku.php/']").each(function() {
         $(this).attr("href", proxyPrefix + $(this).attr("href").substr("/doku.php".length));
+    });
+    $("a[href^='/lib/exe/']").each(function() {
+        $(this).attr("href", "/wiki/res" + $(this).attr("href"));
     });
 
     /* rewrite post requests */
@@ -78,9 +86,8 @@ module.exports = {
 
         k.router.get("/res/*", function( req, res, next ) {
             var resUrl = wikiPrefix + url.parse( req.url ).path.substr(4);
-            console.log( "RES:", resUrl );
-            https.get( resUrl, function( httpRes ) {
-                if( resUrl.indexOf( "css.php?t=dokuwiki" ) > 0 ) {
+            if( resUrl.indexOf( "css.php?t=dokuwiki" ) > 0 ) {
+                https.get( resUrl, function( httpRes ) {
                     /* consume and mangle */
                     var cssContent = "";
 
@@ -111,19 +118,29 @@ module.exports = {
 
                         res.end( cssContent );
                     });
-                }
-                else
-                    /* just pipe request */
-                    httpRes.pipe( res );
-            });
-        });
+                });
+            }
+            else {
+                /* proxy the request 1:1 */
+                var reqOpts = _.extend({},
+                    url.parse( resUrl ), {
+                    headers: req.headers,
+                    host: wikiHost,
+                    method: req.method
+                });
+                reqOpts.headers.host = wikiHost;
 
-        k.router.get("/lib/*", function( req, res, next ) {
-            var resUrl = wikiPrefix + url.parse( req.url ).path.substr(4);
-            console.log( "LIB:", resUrl );
-            https.get( resUrl, function( httpRes ) {
-                httpRes.pipe( res );
-            });
+                var httpReq = https.request( reqOpts, (httpRes) => {
+                    res.statusCode = httpRes.statusCode;
+                    _.each( httpRes.headers, ( value, name ) => {
+                        res.setHeader( name, value );
+                    });
+
+                    httpRes.pipe( res );
+                });
+                httpReq.on("error", ( err ) => { next( err ); });
+                httpReq.end();
+            }
         });
 
         /* render logged in user */
