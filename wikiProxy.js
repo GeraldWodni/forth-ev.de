@@ -151,12 +151,22 @@ module.exports = {
             console.log( wikiPath, req.method );
 
             function performRequest( opts ) {
-                var httpReq = https.request(_.extend({
+                var reqOpts = _.extend({
                     hostname: wikiHost,
                     path: "/doku.php" + wikiPath,
                     port: 443,
-                    method: req.method
-                }, opts), function( httpRes ) {
+                    method: req.method,
+                    headers: _.pick( req.headers,
+                        "content-length",
+                        "content-type",
+                        "user-agent",
+                        "accept",
+                        "accept-encoding",
+                        "accept-language"
+                    )
+                }, opts.requestOpts );
+
+                var httpReq = https.request( reqOpts, ( httpRes ) => {
                     var httpContent = "";
                     httpRes.on( "data", function( data ) { httpContent += data; });
                     httpRes.on( "end", function() {
@@ -169,6 +179,9 @@ module.exports = {
                     console.log( err );
                     k.err.renderHttpStatus( req, res, 502 );
                 });
+
+                if( opts.body )
+                    httpReq.write( opts.body );
 
                 httpReq.end();
             };
