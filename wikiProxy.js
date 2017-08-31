@@ -163,14 +163,21 @@ module.exports = {
                         "user-agent",
                         "accept",
                         "accept-encoding",
-                        "accept-language"
+                        "accept-language",
+                        "cookie"
                     )
                 };
+
+                console.log( "HTTP-REQ".bold.magenta, reqOpts.headers );
 
                 var httpReq = https.request( reqOpts, ( httpRes ) => {
                     var httpContent = "";
                     httpRes.on( "data", function( data ) { httpContent += data; });
                     httpRes.on( "end", function() {
+                        console.log( "HTTP-RES".bold.green, httpRes.headers );
+                        if( httpRes.headers["set-cookie"] )
+                            res.setHeader( "set-cookie", httpRes.headers["set-cookie"] );
+
                         var wiki = mangleWiki( wikiPath, httpContent );
                         renderVals( req, res, next, "wiki", { wiki, title: wiki.title } );
                     });
