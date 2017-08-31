@@ -120,6 +120,25 @@ module.exports = {
                     });
                 });
             }
+            else if( resUrl.indexOf( "/lib/exe/js.php?t=dokuwiki&tseed=" ) >= 0 ) {
+                https.get( resUrl, function( httpRes ) {
+                    /* consume and mangle */
+                    var jsContent = "";
+
+                    _.each( httpRes.headers, function( value, name ) {
+                        if( name.toLowerCase() != "content-length" )
+                            res.setHeader( name, value );
+                    });
+
+                    httpRes.on("data", function( data ) { jsContent += data; } );
+                    httpRes.on("end", function() {
+                        /* mangle JS */
+                        jsContent = jsContent.replace( /DOKU_BASE='\/';/g, "DOKU_BASE='/wiki/res/';" );
+
+                        res.end( jsContent );
+                    });
+                });
+            }
             else {
                 /* proxy the request 1:1 */
                 var reqOpts = _.extend({},
@@ -154,32 +173,53 @@ module.exports = {
                 opts = opts || {};
                 var reqOpts = {
                     hostname: wikiHost,
-                    path: "/doku.php" + wikiPath,
+                    path: "/doku.php" + (opts.path || wikiPath),
                     port: 443,
-                    method: req.method,
-                    headers: _.pick( req.headers,
-                        "content-length",
-                        "content-type",
-                        "user-agent",
+                    method: opts.method || req.method,
+                    headers: _.extend( {
+                        host: wikiHost
+                    },_.omit( _.pick( req.headers,
                         "accept",
                         "accept-encoding",
                         "accept-language",
-                        "cookie"
-                    )
+                        "cache-control",
+                        "cookie",
+                        "content-length",
+                        "content-type",
+                        "user-agent"
+                    ), opts.omittedHeaders ),
+                    opts.extendHeaders )
                 };
-
-                console.log( "HTTP-REQ".bold.magenta, reqOpts.headers );
 
                 var httpReq = https.request( reqOpts, ( httpRes ) => {
                     var httpContent = "";
                     httpRes.on( "data", function( data ) { httpContent += data; });
                     httpRes.on( "end", function() {
-                        console.log( "HTTP-RES".bold.green, httpRes.headers );
-                        if( httpRes.headers["set-cookie"] )
-                            res.setHeader( "set-cookie", httpRes.headers["set-cookie"] );
+                        var setCookie = opts.setCookie || httpRes.headers["set-cookie"];
 
-                        var wiki = mangleWiki( wikiPath, httpContent );
-                        renderVals( req, res, next, "wiki", { wiki, title: wiki.title } );
+                        if( httpRes.statusCode == 302 )
+                        {
+                            /* handle redirect */
+                            var location = httpRes.headers.location;
+                            location = url.parse( location ).path.substr( "/doku.php".length );
+                            performRequest( _.extend( _.omit( opts, "body" ), {
+                                omittedHeaders: ["content-length", "content-type"],
+                                method: "GET",
+                                setCookie: setCookie,
+                                extendHeaders: {
+                                    cookie: setCookie.join( ";" ) + ";" + req.headers.cookie
+                                },
+                                path: location
+                            }));
+                        }
+                        else
+                        {
+                            /* send wiki */
+                            if( setCookie )
+                                res.setHeader( "set-cookie", setCookie );
+                            var wiki = mangleWiki( wikiPath, httpContent );
+                            renderVals( req, res, next, "wiki", { wiki, title: wiki.title } );
+                        }
                     });
                 });
 
