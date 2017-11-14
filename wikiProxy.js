@@ -11,11 +11,9 @@ var proxyPrefix = "/wiki";
 var wikiHost = "wiki.forth-ev.de";
 var wikiPrefix = "https://" + wikiHost;
 
-function mangleWiki( path, html ) {
-    var $ = cheerio.load( html );
+function mangleCommon( html ) {
 
-    /* get header info, then remove header */
-    var title = $("title").text();
+    var $ = cheerio.load( html );
 
     /* rewrite wiki videos */
     $("video[src^='/']").each(function() {
@@ -43,6 +41,24 @@ function mangleWiki( path, html ) {
     /* remove start logo */
     $("#dokuwiki__header div.headings.group h1 a img").remove();
 
+    /* scripts */
+    $("head script").each(function() {
+        var $script = $(this);
+        if( $script.attr("src") )
+            $script.attr("src", $script.attr("src").replace(/^\/lib\//g, "/wiki/res/lib/") );
+    });
+
+    return $;
+}
+
+
+function mangleWiki( path, html ) {
+
+    var $ = mangleCommon( html );
+
+    /* get header info, then remove header */
+    var title = $("title").text();
+
     /* move header content, then delete it */
     var links = "";
     $("head link").each( function() {
@@ -62,12 +78,7 @@ function mangleWiki( path, html ) {
         $link.attr( "href", href );
         links += $.html( $link ) + "\n";
     });
-    var scripts = $.html( $("head script").each(function() {
-            var $script = $(this);
-            if( $script.attr("src") )
-                $script.attr("src", $script.attr("src").replace(/^\/lib\//g, "/wiki/res/lib/") );
-        })
-    );
+    var scripts = $.html( $("head script") );
 
     return {
         html: $("body").html(),
@@ -136,6 +147,34 @@ module.exports = {
                         jsContent = jsContent.replace( /DOKU_BASE='\/';/g, "DOKU_BASE='/wiki/res/';" );
 
                         res.end( jsContent );
+                    });
+                });
+            }
+            else if( resUrl.indexOf( "mediamanager.php" ) >= 0 ) {
+                console.log( "MEDIAMNGR" );
+                https.get( resUrl, function( httpRes ) {
+                    /* consume and mangle */
+                    var htmlContent = "";
+
+                    _.each( httpRes.headers, function( value, name ) {
+                        if( name.toLowerCase() != "content-length" )
+                            res.setHeader( name, value );
+                    });
+
+                    httpRes.on("data", function( data ) { htmlContent += data; } );
+                    httpRes.on("end", function() {
+
+                        /* mangle HTML */
+                        var $ = mangleCommon( htmlContent );
+
+                        $("head link[rel='stylesheet']").each( function() {
+                            var $link = $(this);
+                            $link.attr( "href", "/wiki/res" + $link.attr("href") );
+                        });
+
+                        $("body").attr("id", "dokuwiki__site");
+
+                        res.end( $.html() );
                     });
                 });
             }
