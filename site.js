@@ -128,6 +128,7 @@ module.exports = {
         k.reg("admin").addSiteModule( "navigation", "forth-ev.de", "navigation.js", "Navigation",   "book"      );
         k.reg("admin").addSiteModule( "categories", "forth-ev.de", "categories.js", "Categories",   "th-large"  );
         k.reg("admin").addSiteModule( "articles",   "forth-ev.de", "articles.js",   "Articles",     "edit"      );
+        k.reg("admin").addSiteModule( "albums",     "forth-ev.de", "albums.js",     "Albums",       "camera"      );
 
 
         /** rendering **/
@@ -153,7 +154,7 @@ module.exports = {
                         values[ key ] = data[ i++ ];
                     });
                     /* perform callback */
-                    callback( req, res, values );
+                    callback( req, res, next, values );
                 });
             });
         }
@@ -177,6 +178,16 @@ module.exports = {
                 });
             });
         });
+
+        var specials = {
+            photos: function( req, res, next, data, callback ) {
+                /* TODO: read hierarchy-photo-directory, check for readmes, markdown readmes */
+                k.readHierarchyDir( req.kern.website, "images", function( err, items ) {
+                    if( err ) return next( err );
+                    callback();
+                });
+            }
+        };
 
         /* setup routes for dynamic content; async is used to make sure home and catchall do not register too soon */
         async.series([
@@ -207,18 +218,25 @@ module.exports = {
                         /* register ajax */
                         if( item.category > 0 && file.ext == ".jade" )
                             provide( "get", "/ajax/articles/offset" + item.link + "/:offset", { queries: queries },
-                            function( req, res, data )  {
+                            function( req, res, next, data )  {
                                 var offset = req.requestman ? parseInt(req.requestman.uint( "offset" )||"0") : 0;
                                 k.jade.render( req, res, file.name, vals( req, _.extend( data, { naked: true, link: item.link, offset: offset } ) ) );
                             });
 
 
                         /* register provider */
-                        provide( "get", item.link + "/:offset?", { queries: queries }, function( req, res, data ) {
+                        provide( "get", item.link + "/:offset?", { queries: queries }, function( req, res, next, data ) {
                             switch( file.ext ) {
                                 case ".jade":
                                     var offset = req.requestman ? parseInt(req.requestman.uint( "offset" )||"0") : 0;
-                                    k.jade.render( req, res, file.name, vals( req, _.extend( data, { link: item.link, bodyClass: item.class, offset: offset } ) ) );
+                                    var special = function( req, res, next, data, callback ) { callback( null ); };
+                                    if( _.has( specials, item.class ) )
+                                        special = specials[ item.class ];
+
+                                    special( req, res, next, data, function( obj ) {
+                                        data = _.extend( data, obj || {} );
+                                        k.jade.render( req, res, file.name, vals( req, _.extend( data, { link: item.link, bodyClass: item.class, offset: offset } ) ) );
+                                    });
                                     break;
                                 default:
                                     httpStatus( req, res, 501, { title: "Unknown file-extension", text: "File-extension " + file.ext + " is not handled by site-provider" } );
@@ -237,7 +255,7 @@ module.exports = {
                     "articles": "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName"
                             + "  FROM articles INNER JOIN users ON articles.user=users.id"
                             + "  WHERE frontPage AND expires > NOW() AND reveal < NOW() AND NOT hot ORDER BY reveal DESC LIMIT 10"
-                } }, function( req, res, data ) {
+                } }, function( req, res, next, data ) {
                     k.jade.render( req, res, "home", _.extend( data, vals( req, { bodyClass: "home" } ) ) );
                 });
                 done();

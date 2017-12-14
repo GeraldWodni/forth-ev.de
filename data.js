@@ -42,7 +42,11 @@ module.exports = {
             }
         } );
 
+        var albums =  k.crud.sql( db, { table: "albums",     key: "id", foreignName: "title",
+        } );
+
         return {
+            albums:         albums,
             articles:       articles,
             categories:     categories,
             navigation:     navigation,
