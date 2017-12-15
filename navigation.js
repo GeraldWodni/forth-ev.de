@@ -19,7 +19,10 @@ module.exports = {
                 class:      { text: "CSS-Class",    type: "text"                                            },
                 position:   { text: "Position",     type: "enum", keys: [ "top", "bottom" ]                 },
                 category:   { text: "Category",     type: "foreign"                                         },
-                file:       { text: "File",         type: "text"                                            }
+                file:       { text: "File",         type: "file", fileOpts: {
+                    fileShowFilters: [ /\.jade$/g ],
+                    root: "/views"
+                }}
             }
         });
     }

@@ -14,7 +14,7 @@ module.exports = {
                 id:         { name: "id",           filter: "id",   source: "requestman"                    },
                 //oid:        { text: "=Alte ID (Importrestl, bitte nicht ändern)",    type: "text"           },
                 name:       { text: "=Name",        type: "text",   attributes: { required: true }          },
-                image:      { text: "=Bild",        type: "text"                                            },
+                image:      { text: "=Bild",        type: "image"                                           },
                 newsCount:  { text: "=Newseinträge",type: "number", attributes: { min: 0, max: 100, step: 1 } }
             },
         });

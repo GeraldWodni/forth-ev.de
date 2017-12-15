@@ -15,7 +15,11 @@ module.exports = {
             fields: {
                 id:         { name: "id",           filter: "id",   source: "requestman"                    },
                 title:      { text: "Title",        type: "text",   attributes: { required: true }          },
-                folder:     { text: "Folder",       type: "text",   attributes: { required: true }          },
+                folder:     { text: "Folder",       type: "folder", attributes: { required: true }, folderOpts: {
+                    root: "/images",
+                    prefix: "/images",
+                    hidePrefix: true
+                }},
                 intro:      { text: "Intro",        type: "textarea"                                        },
                 body:       { text: "=Lange Beschreibung",    type: "textarea"                              }
             }
