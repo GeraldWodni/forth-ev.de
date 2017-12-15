@@ -180,10 +180,19 @@ module.exports = {
         });
 
         var specials = {
-            photos: function( req, res, next, data, callback ) {
+            albums: function( req, res, next, data, callback ) {
                 /* TODO: read hierarchy-photo-directory, check for readmes, markdown readmes */
-                k.readHierarchyDir( req.kern.website, "images", function( err, items ) {
+
+                /* no offset? just render albums then */
+                if( !req.requestman ) k.requestman( req );
+                var offset = req.requestman.filename("offset");
+                if( !offset ) return callback();
+
+                k.readHierarchyDir( req.kern.website, "images/" + offset, function( err, items ) {
                     if( err ) return next( err );
+                    console.log( items );
+                    items = items.map( function( item ) { return "/images/" + offset + "/" + item; } );
+                    data.albumImages = items;
                     callback();
                 });
             }
@@ -208,7 +217,7 @@ module.exports = {
                             queries = function( req ) {
                                 k.requestman( req );
                                 var offset = parseInt(req.requestman.uint("offset")||"0") || 0;
-                                return { articles: mysql.format( 
+                                return { articles: mysql.format(
                                        "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName"
                                     + " FROM articles INNER JOIN users ON articles.user=users.id"
                                     + " WHERE category=? AND reveal < NOW() ORDER BY reveal DESC LIMIT ?,10", [ item.category, offset ] )
@@ -222,6 +231,10 @@ module.exports = {
                                 var offset = req.requestman ? parseInt(req.requestman.uint( "offset" )||"0") : 0;
                                 k.jade.render( req, res, file.name, vals( req, _.extend( data, { naked: true, link: item.link, offset: offset } ) ) );
                             });
+
+                        /* specials */
+                        if( item.class == "albums" )
+                            queries.albums = "SELECT * FROM albums ORDER BY title ASC";
 
 
                         /* register provider */

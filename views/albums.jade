@@ -1,0 +1,20 @@
+//- (c)2017 by Gerald Wodni
+
+extends layout
+
+block menu
+    +menu
+
+block content
+    h1 Albums
+
+    each album in albums
+        h2= album.title
+        a(href=album.folder.replace(/^\/images/, '/albums'))
+            =album.folder
+        != marked( album.intro )
+
+    if albumImages
+        each albumImage in albumImages
+            img(src=albumImage.replace( /^\/images\//, "/images-preview/" ))
+
