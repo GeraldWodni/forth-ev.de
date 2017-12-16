@@ -4,17 +4,36 @@ extends layout
 
 block menu
     +menu
+    +script("/js/album.js")
 
 block content
-    h1 Albums
+    +box
+        if albumImages
+            each album in albums
+                if album.folder.indexOf( albumLink ) > 0
+                    h1= album.title
+                    != marked( album.body )
+            #album-overlay
+                a.album-btn.close(title=__("Close"))
+                    +fa("close")
+                a.album-btn.prev
+                    +fa("chevron-left")
+                a.album-btn.next
+                    +fa("chevron-right")
 
-    each album in albums
-        h2= album.title
-        a(href=album.folder.replace(/^\/images/, '/albums'))
-            =album.folder
-        != marked( album.intro )
+            ul.album
+                each albumImage in albumImages
+                    - var preview = albumImage.replace( /^\/images\//, "/images-preview/" );
+                    - var albumUrl= albumImage.replace( /^\/images\//, "/images-gallery/" );
+                    li
+                        a(href=albumImage,data-album-image=albumUrl)
+                            img(src=preview)
+        else
+            h1 Albums
+            each album in albums
+                h2= album.title
+                a(href=album.folder.replace(/^\/images/, '/albums'))
+                    =album.folder
+                != marked( album.intro )
 
-    if albumImages
-        each albumImage in albumImages
-            img(src=albumImage.replace( /^\/images\//, "/images-preview/" ))
 

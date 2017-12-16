@@ -193,6 +193,7 @@ module.exports = {
                     console.log( items );
                     items = items.map( function( item ) { return "/images/" + offset + "/" + item; } );
                     data.albumImages = items;
+                    data.albumLink = offset;
                     callback();
                 });
             }
