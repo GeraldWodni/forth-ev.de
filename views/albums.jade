@@ -14,19 +14,24 @@ block content
                     h1= album.title
                     != marked( album.body )
             #album-overlay
+                a.album-btn.download(title=__("Download"))
+                    +fa("download fa-fw")
                 a.album-btn.close(title=__("Close"))
-                    +fa("close")
+                    +fa("close fa-fw")
                 a.album-btn.prev
                     +fa("chevron-left")
+                    +fa("circle-o-notch fa-spin").loading
                 a.album-btn.next
+                    +fa("circle-o-notch fa-spin").loading
                     +fa("chevron-right")
 
             ul.album
                 each albumImage in albumImages
-                    - var preview = albumImage.replace( /^\/images\//, "/images-preview/" );
-                    - var albumUrl= albumImage.replace( /^\/images\//, "/images-gallery/" );
+                    - var preview       = albumImage.replace( /^\/images\//, "/images-preview/" );
+                    - var albumUrl      = albumImage.replace( /^\/images\//, "/images-gallery/" );
+                    - var downloadUrl   = albumImage.replace( /^\/images\//, "/images-download/" );
                     li
-                        a(href=albumImage,data-album-image=albumUrl)
+                        a(href=albumImage,data-album-image=albumUrl,data-album-download=downloadUrl)
                             img(src=preview)
         else
             h1 Albums
