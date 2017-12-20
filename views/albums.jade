@@ -36,9 +36,8 @@ block content
         else
             h1 Albums
             each album in albums
-                h2= album.title
                 a(href=album.folder.replace(/^\/images/, '/albums'))
-                    =album.folder
-                != marked( album.intro )
+                    h2= album.title
+                    != marked( album.intro )
 
 
