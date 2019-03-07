@@ -21,6 +21,19 @@ mixin menuItem( link, icon, text )
             else
                 span.hidden-xs= text
 
+mixin menuItemFooter( link, text )
+    li&attributes(attributes)
+        a(href="#{link}",title=text.all||text,target=(link.indexOf("http")==0?"_blank":false))
+            if( _.isObject( text ) )
+                each size in ["sm", "md", "lg"]
+                    span(class="inline-#{size}")
+                        if _.has( text, size )
+                            = text[size]
+                        else
+                            = text.all
+            else
+                span.hidden-xs= text
+
 mixin menu
     div.navbar.navbar-fixed-top(role='navigation')&attributes(attributes)
         div.container
@@ -38,7 +51,7 @@ mixin menu
                         +menuItem("/profile",    "user",         "Profile"   )
                         +menuItem("/logout",     "sign-out",     "Logout"    )
                     else
-                        +menuItem("/profile",    "sign-in",      "Login/Sign up" )
+                        +menuItem("/profile",    "sign-in",      "Login" )
 
 
 if naked
@@ -66,12 +79,16 @@ else
             footer
                 div.container-fluid
                     div.row
-                        div.col-xs-4
+                        div.col-sm-4
                             | powered by  
                             a(href='https://github.com/GeraldWodni/kern.js',target="_blank") kern.js
-                        //-div.col-xs-4.text-center
-                        //-a(href="/todo") TODOs
-                        div.col-xs-8.text-right
+
+                        div.col-sm-4
+                            ul.navbar-nav
+                                each item in navigationBottom
+                                    +menuItemFooter( item.link, item.name )
+
+                        div.col-sm-4.text-right
                             //a(href="http://wodni.at") 
                             span.debug-size
                                 | ©

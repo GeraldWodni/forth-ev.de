@@ -252,6 +252,12 @@ module.exports = {
                                         k.jade.render( req, res, file.name, vals( req, _.extend( data, { link: item.link, bodyClass: item.class, offset: offset } ) ) );
                                     });
                                     break;
+                                case ".md":
+                                    k.readHierarchyFile( k.website, "/views/" + file.name + file.ext, function( err, contents ) {
+                                        if( err ) return next( err );
+                                        renderVals( req, res, next, "markdown-wrapper", { content: contents[0] } );
+                                    });
+                                    break;
                                 default:
                                     httpStatus( req, res, 501, { title: "Unknown file-extension", text: "File-extension " + file.ext + " is not handled by site-provider" } );
                             }

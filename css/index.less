@@ -170,6 +170,27 @@ footer {
     background-color: @footer-background;
 
     border-top: 1px solid #CCC;
+
+    a {
+        color: @navbar-color;
+    }
+
+    .navbar-nav {
+        width: 100%;
+        list-style: none;
+        padding-left: 0;
+        display: flex;
+        justify-content: space-between;
+
+        li a {
+            padding: 6px 5px;
+        }
+
+        a:hover {
+            color: @navbar-hover;
+            background-color: @navbar-hover-background;
+        }
+    }
 }
 
 h2 .glyphicon {
