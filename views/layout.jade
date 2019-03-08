@@ -32,7 +32,8 @@ mixin menuItemFooter( link, text )
                         else
                             = text.all
             else
-                span.hidden-xs= text
+                if text !== ""
+                    span= text
 
 mixin menu
     div.navbar.navbar-fixed-top(role='navigation')&attributes(attributes)
@@ -46,12 +47,15 @@ mixin menu
                     each item in navigationTop
                         if item.link.indexOf( "wiki" ) != -1
                             - item.link = "/wiki"
-                        +menuItem( item.link, item.icon, item.name )
+                        if item.shortName != item.name
+                            +menuItem( item.link, item.icon, { all: item.name, sm: item.shortName } )
+                        else
+                            +menuItem( item.link, item.icon, item.name )
                     if loggedIn
-                        +menuItem("/profile",    "user",         "Profile"   )
-                        +menuItem("/logout",     "sign-out",     "Logout"    )
+                        +menuItem("/profile",    "user",    ""   )(title="Profile")
+                        +menuItem("/logout",     "sign-out",""   )(title="Logout")
                     else
-                        +menuItem("/profile",    "sign-in",      "Login" )
+                        +menuItem("/profile",    "sign-in", {lg: "Login", all: ""}   )(title="Login")
 
 
 if naked
@@ -79,22 +83,24 @@ else
             footer
                 div.container-fluid
                     div.row
-                        div.col-sm-4
+                        div.col-md-4.hidden-sm.hidden-xs
                             | powered by  
                             a(href='https://github.com/GeraldWodni/kern.js',target="_blank") kern.js
 
-                        div.col-sm-4
+                        div.col-md-4.col-sm-6.col-xs-10
                             ul.navbar-nav
                                 each item in navigationBottom
                                     +menuItemFooter( item.link, item.name )
 
-                        div.col-sm-4.text-right
+                        div.col-md-4.col-sm-6.col-xs-2.text-right
                             //a(href="http://wodni.at") 
                             span.debug-size
                                 | ©
-                            | copyright 
+                            span.hidden-xs
+                                | copyright 
                             = (new Date()).getFullYear()
-                            |  Forth-Gesellschaft e.V.
+                            span.hidden-xs
+                                |  Forth-Gesellschaft e.V.
                 div#bootstrapSize
                     div.visible-xs
                     div.visible-sm

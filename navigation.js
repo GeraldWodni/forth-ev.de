@@ -13,6 +13,7 @@ module.exports = {
             fields: {
                 id:         { name: "id",           filter: "id",   source: "requestman"                    },
                 name:       { text: "Name",         type: "text",   attributes: { required: true }          },
+                shortName:  { text: "Short name",   type: "text",   attributes: { required: true }          },
                 priority:   { text: "Priority",     type: "number", filter: "decimal"                       },
                 link:       { text: "Link",         type: "text",   filter: "link",   attributes: { required: true } },
                 icon:       { text: "Icon",         type: "text",   filter: "link"                          },

@@ -14,14 +14,30 @@ body.home {
             display: block;
             float: left;
             margin-right: 50px;
-        }
-        h1 {
-            font-size: 80px;
-        }
-        h2 {
-            font-size: 40px;
+
+            @media @only-xs  {
+                margin-right: 20px;
+            }
         }
 
+
+        h1 { font-size: 35px; }
+        h2 { font-size: 20px; }
+
+        @media @only-sm {
+            h1 { font-size: 40px; }
+            h2 { font-size: 26px; }
+        }
+
+        @media @only-md {
+            h1 { font-size: 60px; }
+            h2 { font-size: 35px; }
+        }
+
+        @media @only-lg {
+            h1 { font-size: 80px; }
+            h2 { font-size: 40px; }
+        }
     }
 
     /* Navigation */
