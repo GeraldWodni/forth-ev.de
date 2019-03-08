@@ -55,8 +55,8 @@ module.exports = {
 
         /* layout queries (to be used on every view) */
         var layoutQueries = {
-            "navigationTop": "SELECT * FROM navigation WHERE position='top'",
-            "navigationBottom": "SELECT * FROM navigation WHERE position='bottom'"
+            "navigationTop": "SELECT * FROM navigation WHERE position='top' ORDER BY priority",
+            "navigationBottom": "SELECT * FROM navigation WHERE position='bottom ORDER BY priority'"
         }
 
         /** ajax api **/
@@ -249,7 +249,7 @@ module.exports = {
 
                                     special( req, res, next, data, function( obj ) {
                                         data = _.extend( data, obj || {} );
-                                        k.jade.render( req, res, file.name, vals( req, _.extend( data, { link: item.link, bodyClass: item.class, offset: offset } ) ) );
+                                        renderVals( req, res, next, file.name, _.extend( data, { link: item.link, bodyClass: item.class, offset: offset } ) );
                                     });
                                     break;
                                 case ".md":
@@ -276,7 +276,7 @@ module.exports = {
                             + "  FROM articles INNER JOIN users ON articles.user=users.id"
                             + "  WHERE frontPage AND expires > NOW() AND reveal < NOW() AND NOT hot ORDER BY reveal DESC LIMIT 10"
                 } }, function( req, res, next, data ) {
-                    k.jade.render( req, res, "home", _.extend( data, vals( req, { bodyClass: "home" } ) ) );
+                    renderVals( req, res, next, "home", _.extend( data, vals( req, { bodyClass: "home" } ) ) );
                 });
                 done();
             },

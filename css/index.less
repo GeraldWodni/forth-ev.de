@@ -123,10 +123,6 @@ a {
         }
     }
 
-    div.navbar-header {
-        float: left;
-    }
-
     a, a.navbar-brand {
         color: @navbar-color;
         padding: 15px 13px;
@@ -151,7 +147,7 @@ a {
         }
 
         @media @only-xs {
-            padding: 15px 7px;
+            padding: 15px 10px;
         }
 
         &:hover {
@@ -180,6 +176,10 @@ a {
         li {
             display: inline;
         }
+
+        @media @only-xs { & > li > a {
+            padding-top: 15px;
+        } }
     }
 }
 
@@ -226,7 +226,7 @@ h2 .glyphicon {
 }
 
 .main-content {
-    margin-top: 50px;
+    //margin-top: @navbar-height;
 }
 
 .modal ul.content {
@@ -344,6 +344,10 @@ div.separator {
         box-shadow: 0px 4px 2px @img-shadow;
         margin: 10px 20px 20px 3px;
     }
+
+    @media @only-xs {
+        padding: 0 4px;
+    }
 }
 
 .box.article {
@@ -375,6 +379,9 @@ div.separator {
         position: relative;
         top: -30px;
         left: 30px;
+        @media @only-xs {
+            left: 20px;
+        }
     }
 
     .edit {

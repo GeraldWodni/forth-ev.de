@@ -8,7 +8,7 @@ if !naked
 
 mixin menuItem( link, icon, text )
     li&attributes(attributes)
-        a(href="#{link}",title=text.all||text,target=(link.indexOf("http")==0?"_blank":false))
+        a(href="#{link}",title=text.all||text.title||text,target=(link.indexOf("http")==0?"_blank":false))
             +fa(icon)
             | 
             if( _.isObject( text ) )
@@ -17,7 +17,10 @@ mixin menuItem( link, icon, text )
                         if _.has( text, size )
                             = text[size]
                         else
-                            = text.all
+                            if text.all !== ""
+                                = text.all
+                            else
+                                | &nbsp;
             else
                 span.hidden-xs= text
 
@@ -55,7 +58,7 @@ mixin menu
                         +menuItem("/profile",    "user",    ""   )(title="Profile")
                         +menuItem("/logout",     "sign-out",""   )(title="Logout")
                     else
-                        +menuItem("/profile",    "sign-in", {lg: "Login", all: ""}   )(title="Login")
+                        +menuItem("/profile",    "sign-in", {lg: "Login", all: "", title: "Login"}   )
 
 
 if naked
@@ -89,7 +92,7 @@ else
 
                         div.col-md-4.col-sm-6.col-xs-10
                             ul.navbar-nav
-                                each item in navigationBottom
+                                each item in navigationBottom || []
                                     +menuItemFooter( item.link, item.name )
 
                         div.col-md-4.col-sm-6.col-xs-2.text-right
