@@ -15,6 +15,8 @@ module.exports = {
             fields: {
                 id:         { name: "id",           filter: "id",   source: "requestman"                    },
                 title:      { text: "Title",        type: "text",   attributes: { required: true }          },
+                start:      { text: "Start",        type: "date"                                            },
+                end:        { text: "End",          type: "date"                                            },
                 folder:     { text: "Folder",       type: "folder", attributes: { required: true }, folderOpts: {
                     root: "/images",
                     prefix: "/images",

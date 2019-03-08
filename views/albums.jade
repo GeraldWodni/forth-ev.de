@@ -34,10 +34,16 @@ block content
                         a(href=albumImage,data-album-image=albumUrl,data-album-download=downloadUrl)
                             img(src=preview)
         else
-            h1 Albums
+            //- please make all changes in albums.head and leave this file untouched.
+            include albums-head
             each album in albums
-                a(href=album.folder.replace(/^\/images/, '/albums'))
-                    h2= album.title
-                    != marked( album.intro )
+                +box.article.album-article
+                    a(href=album.folder.replace(/^\/images/, '/albums'))
+                        .created
+                            = moment(album.start).format("DD.MM.YYYY")
+                            |  - 
+                            = moment(album.end).format("DD.MM.YYYY")
+                        h3= album.title
+                        != marked( album.intro )
 
 

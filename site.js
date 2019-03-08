@@ -235,7 +235,7 @@ module.exports = {
 
                         /* specials */
                         if( item.class == "albums" )
-                            queries.albums = "SELECT * FROM albums ORDER BY title ASC";
+                            queries.albums = "SELECT * FROM albums ORDER BY start DESC";
 
 
                         /* register provider */
