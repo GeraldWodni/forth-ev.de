@@ -2,6 +2,15 @@
 logs
 *.log
 
+# ignore sql credits
+sql/my.cnf
+
+# ignore sql-dump containing full names and emails
+sql/forth-ev.sql
+
+# ignore old import (could contain private information)
+forth-ev.sql
+
 # Runtime data
 pids
 *.pid

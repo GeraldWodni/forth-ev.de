@@ -1,0 +1,10 @@
+# copy this file, remove .example
+# replace <dump-user> by a mysql-user created with:
+# GRANT SELECT, LOCK TABLES, SHOW VIEW, EVENT ON `<db-name>`.* TO '<dump-user>'@'localhost' IDENTIFIED BY '<password>';
+# GRANT SELECT, LOCK TABLES ON `mysql`.* TO '<dump-user>'@'localhost';
+# after that you can run dump.sh
+
+# never, ever commit my.cnf itself!
+[mysqldump]
+user=<dump-user>
+password=<password>
