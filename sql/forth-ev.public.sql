@@ -19,16 +19,21 @@ DROP TABLE IF EXISTS `albums`;
 CREATE TABLE `albums` (
   `id` int(32) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
+  `start` date NOT NULL,
+  `end` date NOT NULL,
   `folder` varchar(255) NOT NULL,
   `intro` text NOT NULL,
   `body` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `albums` WRITE;
 /*!40000 ALTER TABLE `albums` DISABLE KEYS */;
-INSERT INTO `albums` VALUES (1,'2016 Makerfaire','/images/2016-Makerfaire','![Hannover Makerfaire 2016](https://neu.forth-ev.de/images-preview/2016-Makerfaire/2016-05-27_13-01-32.jpg)\r\nZum 2. Mal auf der Großartigen Hannover Makerfaire!','Die Forth Gesellschaft war zum 2. Mal auf der Hannover Makerfaire unterwegs.');
+INSERT INTO `albums` VALUES (1,'2016 Makerfaire','2016-05-27','2016-05-29','/images/2016-Makerfaire','![Hannover Makerfaire 2016](https://neu.forth-ev.de/images-preview/2016-Makerfaire/2016-05-27_13-01-32.jpg)\r\nZum 2. Mal auf der Großartigen Hannover Makerfaire!','Die Forth Gesellschaft war zum 2. Mal auf der Hannover Makerfaire unterwegs.');
+INSERT INTO `albums` VALUES (2,'2016 Forthtagung Augsburg','2016-04-15','2016-04-17','/images/2016-ft-Augsburg','![Forthtagung Augsburg 2016](https://neu.forth-ev.de/images-preview/2016-ft-Augsburg/2016-04-15_22-30-38.jpg)\r\nText','Langer Text');
+INSERT INTO `albums` VALUES (3,'2017 Forthtagung Kalkar','2017-04-21','2017-04-23','/images/2017-ft-Kalkar','![Forthtagung Kalkar 2017](https://neu.forth-ev.de/images-preview/2017-ft-Kalkar/2017-04-21_14-32-34.jpg)\r\n\r\nDer nie in Betrieb gewesene schnelle Brüter hat uns technisch sehr interessiert,\r\nwenn auch viel über die Moral der Atomkraft disktutiert wurde.','Der nie in Betrieb gewesene schnelle Brüter hat uns technisch sehr interessiert,\r\nwenn auch viel über die Moral der Atomkraft disktutiert wurde.\r\n\r\nMartin Bitter hat diese Forthtagung organisiert und konnte sogar einen\r\nehemaligen Reaktorfahrer zu einem hochinteressanten Vortrag überreden.');
+INSERT INTO `albums` VALUES (4,'33. EuroForth - Bad Vöslau','2017-09-08','2017-09-10','/images/2017-ef-Bad-Voeslau','![EuroForth 2017 Bad Vöslau](https://neu.forth-ev.de/images-preview/2017-ef-Bad-Voeslau/2017-09-09_23-14-53.jpg)\r\n\r\nEin paar Schnellbahnminuten südlich von Wien liegt Bad Vöslau in einer\r\nWein- und Wandergegend.','Ein paar Schnellbahnminuten südlich von Wien liegt Bad Vöslau in einer\r\nWein- und Wandergegend.\r\n\r\nWir konnten uns über Gäste aus vielen Ländern freuen:\r\n- China\r\n- Deutschland\r\n- Estland\r\n- Österreich (na no na ned :P)\r\n- Russland\r\n- Südafrika\r\n- Vereinigtes Königreich\r\n- Vereinigte Staaten von Amerika');
 /*!40000 ALTER TABLE `albums` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `articles`;
@@ -51,7 +56,7 @@ CREATE TABLE `articles` (
   `intro` text NOT NULL,
   `body` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=366 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=368 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `articles` WRITE;
@@ -418,7 +423,9 @@ INSERT INTO `articles` VALUES (359,'',6,'Videos der Forth-Tagung 2017',1,'markdo
 INSERT INTO `articles` VALUES (362,'',3,'Heft 4d2017-01',0,'markdown','0000-00-00',12,'',0,1,'2017-03-19 12:00:00','0000-00-00 00:00:00','  * What’s in a name? - Albert Nijhof\r\n  * µC–Pakete - Gerald Wodni\r\n  * The Sockpuppet Forth to C interface - Stephen Pelc\r\n  * SSD1306 — A 128x64 Bit OLED Display - Willem Ouwerkerk\r\n  * v4th - Vic Plichota\r\n  * ROM und RAM in einem ROMforth - Albert Nijhof\r\n  * Vintage Computing - FORPS - Jostein Skjelstad\r\n  * Easy Forth - online ebook in JavaScript - Nick Morgan','');
 INSERT INTO `articles` VALUES (363,'',3,'Heft 4d2016-04',0,'markdown','0000-00-00',12,'',0,0,'2016-11-27 12:00:00','0000-00-00 00:00:00','  * SHA–1 Secure Hash Algorithm - Rafael Deliano\r\n  * Mecrisp–Ice - Matthias Koch\r\n  * Clock Works 1 — Die kleine Uhr - Erich Wälde\r\n  * How to clone noForth on a MSP430G2553 - Willem Ouwerkerk\r\n  * A new serial tool: vive la Folie! - Jean–Claude Wippler\r\n  * awords — ein Tool - Filippo Sala\r\n  * Stacks für Forth - Matthias Trute\r\n','');
 INSERT INTO `articles` VALUES (364,'',6,'Fig-Forth für die PDP-11',1,'markdown','0000-00-00',1,'',0,1,'2017-08-29 12:00:00','2027-08-31 12:00:00','Paul Hardy hat alles zusammengesammelt, was man braucht, um fig-Forth für die PDP-11 im Emulator auf aktuellen Linuxen laufen zu lassen:\r\n\r\nhttp://stackosaurus.com/figforth.html','');
-INSERT INTO `articles` VALUES (365,'',6,'Videos von der EuroForth',1,'markdown','0000-00-00',1,'',0,1,'2017-09-30 12:00:00','2027-10-31 12:00:00','Die [Videos zur EuroForth 2017](https://wiki.forth-ev.de/doku.php/events:euroforth-2017) sind online\r\n\r\nDie [Proceedings](http://www.complang.tuwien.ac.at/anton/euroforth/ef17/genproceedings/papers/) gibt es wie bei der EuroForth üblich auf Antons EuroForth-Seite.','');
+INSERT INTO `articles` VALUES (365,'',6,'Videos von der EuroForth 2017',1,'markdown','0000-00-00',1,'',0,1,'2017-09-30 12:00:00','2027-10-31 12:00:00','Die [Videos zur EuroForth 2017](https://wiki.forth-ev.de/doku.php/events:euroforth-2017) sind online\r\n\r\nDie [Proceedings](http://www.complang.tuwien.ac.at/anton/euroforth/ef17/genproceedings/papers/) gibt es wie bei der EuroForth üblich auf Antons EuroForth-Seite.','');
+INSERT INTO `articles` VALUES (366,'',6,'Die Videos zur Tagung 2018 sind da',1,'markdown','0000-00-00',1,'',0,1,'2018-05-13 12:00:00','0000-00-00 00:00:00','Die Videos zur [Forth-Tagung 2018](https://wiki.forth-ev.de/doku.php/events:tagung-2018) im Linux-Hotel sind da; Links auf die Slides, so vorhanden, hinter dem entsprechenden Video.','');
+INSERT INTO `articles` VALUES (367,'',6,'Die Videos zur EuroForth 2018 sind da',1,'markdown','0000-00-00',1,'',0,1,'2018-09-26 12:00:00','0000-00-00 00:00:00','Die Videos zur [Euroforth 2018](https://wiki.forth-ev.de/doku.php/events:ef2018:start) in Edinburgh sind da. Papers/Slides wie immer auf [Antons EuroForth-Page](http://www.complang.tuwien.ac.at/anton/euroforth/ef18/papers/)','');
 /*!40000 ALTER TABLE `articles` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `categories`;
@@ -473,10 +480,10 @@ INSERT INTO `navigation` VALUES (1,'Forth','Forth',10.00,'/forth','hand-spock-o'
 INSERT INTO `navigation` VALUES (2,'Impressum','Impressum',110.00,'/wiki/impressum','list-ul','category','bottom',0,'');
 INSERT INTO `navigation` VALUES (3,'Kontakt','Kontakt',120.00,'/kontakt','user-circle','category','bottom',0,'kontakt.md');
 INSERT INTO `navigation` VALUES (4,'Nachrichten','News',20.00,'/nachrichten','globe','category','top',1,'nachrichten.jade');
-INSERT INTO `navigation` VALUES (5,'Wiki','Wiki',30.00,'//wiki.forth-ev.de/','wikipedia-w','category','top',0,'');
-INSERT INTO `navigation` VALUES (6,'µC-Verleih','µVerleih',40.00,'/mikrocontroller-verleih','microchip','category','top',9,'mikrocontroller-verleih.jade');
+INSERT INTO `navigation` VALUES (5,'Wiki','Wiki',30.00,'/wiki','wikipedia-w','category','top',0,'');
+INSERT INTO `navigation` VALUES (6,'µC-Verleih','µVerleih',40.00,'/wiki/mcv:mcv2','microchip','category','top',9,'mikrocontroller-verleih.jade');
 INSERT INTO `navigation` VALUES (7,'Tagungen','Tagungen',100.00,'/tagungen','wechat','category','top',5,'tagungen.jade');
-INSERT INTO `navigation` VALUES (8,'4D-Archiv','4D',60.00,'//wiki.forth-ev.de/doku.php/vd-archiv','newspaper-o','forth','top',0,'4d-archiv.jade');
+INSERT INTO `navigation` VALUES (8,'4D-Archiv','4D',60.00,'/wiki/vd-archiv','newspaper-o','forth','top',0,'4d-archiv.jade');
 INSERT INTO `navigation` VALUES (10,'Alben','Alben',25.00,'/albums','picture-o','albums','top',0,'albums.jade');
 INSERT INTO `navigation` VALUES (11,'Datenschutzerklärung','Datenschutzerklärung',115.00,'/wiki/datenschutzerklaerung','list-ul','category','bottom',0,'');
 /*!40000 ALTER TABLE `navigation` ENABLE KEYS */;
