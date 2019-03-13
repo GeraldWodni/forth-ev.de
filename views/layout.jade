@@ -48,7 +48,7 @@ mixin menu
                         | Forth e.V.
                 ul.navbar-nav
                     each item in navigationTop
-                        if item.link.indexOf( "wiki" ) != -1
+                        if item.link.indexOf( "xxxwiki" ) != -1
                             - item.link = "/wiki"
                         if item.shortName != item.name
                             +menuItem( item.link, item.icon, { all: item.name, sm: item.shortName } )
