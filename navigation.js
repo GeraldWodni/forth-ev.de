@@ -21,7 +21,7 @@ module.exports = {
                 position:   { text: "Position",     type: "enum", keys: [ "top", "bottom" ]                 },
                 category:   { text: "Category",     type: "foreign"                                         },
                 file:       { text: "File",         type: "file", fileOpts: {
-                    fileShowFilters: [ /\.jade$/g ],
+                    fileShowFilters: [ /\.jade$|\.md$/g ],
                     root: "/views"
                 }}
             }
