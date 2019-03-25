@@ -14,7 +14,8 @@ block content
     +box.hot
         each article in articlesHot
             h2= article.title
-            p!= article.intro.replace( /src="\/images\//g, 'src="http://forth-ev.de/images/' )
+            - var intro = article.type == "markdown" ? marked( article.intro ) : article.intro
+            p!= intro.replace( /src="\/images\//g, 'src="http://forth-ev.de/images/' )
 
     each article in articles
         +article(article)
