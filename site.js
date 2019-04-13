@@ -128,7 +128,8 @@ module.exports = {
         k.reg("admin").addSiteModule( "navigation", "forth-ev.de", "navigation.js", "Navigation",   "book"      );
         k.reg("admin").addSiteModule( "categories", "forth-ev.de", "categories.js", "Categories",   "th-large"  );
         k.reg("admin").addSiteModule( "articles",   "forth-ev.de", "articles.js",   "Articles",     "edit"      );
-        k.reg("admin").addSiteModule( "albums",     "forth-ev.de", "albums.js",     "Albums",       "camera"      );
+        k.reg("admin").addSiteModule( "albums",     "forth-ev.de", "albums.js",     "Albums",       "camera"    );
+        k.reg("admin").addSiteModule( "db-users",   "forth-ev.de", "dbUsers.js",    "DB-Users",     "user"     );
 
 
         /** rendering **/

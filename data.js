@@ -15,8 +15,8 @@ module.exports = {
                 category:   { crud: categories }
             },
             wheres: {
-                "top": { where: "`position`='top'" },
-                "bottom": { where: "`position`='bottom'" }
+                "top": { where: "`position`='top' AND display" },
+                "bottom": { where: "`position`='bottom' AND display" }
             }
         } );
 

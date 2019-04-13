@@ -15,6 +15,7 @@ module.exports = {
                 name:       { text: "Name",         type: "text",   attributes: { required: true }          },
                 shortName:  { text: "Short name",   type: "text",   attributes: { required: true }          },
                 priority:   { text: "Priority",     type: "number", filter: "decimal"                       },
+                display:    { text: "Display",      type: "checkbox"                                        },
                 link:       { text: "Link",         type: "text",   filter: "link",   attributes: { required: true } },
                 icon:       { text: "Icon",         type: "text",   filter: "link"                          },
                 class:      { text: "CSS-Class",    type: "text"                                            },
