@@ -2,6 +2,10 @@
 logs
 *.log
 
+# albums
+images/19*
+images/20*
+
 # ignore sql credits
 sql/my.cnf
 
