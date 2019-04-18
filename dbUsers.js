@@ -16,6 +16,8 @@ module.exports = {
                 name:       { text: "Title",        type: "text",   attributes: { required: true }          },
                 fullName:   { text: "Display",      type: "checkbox"                                        },
                 email:      { text: "Type",         type: "text", filter: "email" },
+                avatar:     { text: "=Avatar",      type: "text", filter: "link" },
+                image:      { text: "Image",        type: "text", filter: "link" },
                 details:    { text: "Details",      type: "textarea"                            }
             }
         });

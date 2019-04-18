@@ -12,6 +12,8 @@ block content
         +messages(messages)
 
         form(method='post',role='form')
+            +text-field("avatar", "Avatar - max 64x64 Pixel. Wenn leer wird Gravatar verwendet.", user.avatar)
+            +text-field("image", "Image - max 496x496 Pixel. Wenn leer wird Gravatar verwendet.", user.image)
             +email-field("email", "Email", user.email)
             +textarea-field("details", "Details - Erzähl etwas von dir, verlinke deine Profile (verwendet Markdown)", user.details)
             button.btn.btn-primary(type='submit',name='change',value='yes')=__("Change")

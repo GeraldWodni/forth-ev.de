@@ -35,6 +35,9 @@ block content
                                 h3= article.title
             .col-md-4
                 h1.text-center
-                    +gravatar( user.emailMd5, user.name, 496 ).img-responsive
+                    if user.image.trim() == ''
+                        +gravatar( user.emailMd5, user.name, 496 ).img-responsive
+                    else
+                        img(src=user.image, alt=user.name).img-responsive
                     = user.name
 

@@ -26,11 +26,20 @@ module.exports = {
                 var user = users[0];
                 user.emailMd5 = md5( user.email );
 
-                /* user's articles */
-                kData.articles.readWhere( "user", [ user.id ], function( err, articles ) {
+                db.query( "SELECT avatar, image FROM users WHERE name=?", [ userLink ], function( err, dbUsers ) {
                     if( err ) return next( err );
 
-                    renderVals( req, res, next, "profile", { user: user, articles: articles, manage: req.session && user.name==req.session.loggedInUsername, title: user.name } );
+                    if( dbUsers && dbUsers.length > 0 && dbUsers[0].avatar != '' )
+                        user.avatar = dbUsers[0].avatar;
+                    if( dbUsers && dbUsers.length > 0 && dbUsers[0].image != '' )
+                        user.image = dbUsers[0].image;
+
+                    /* user's articles */
+                    kData.articles.readWhere( "user", [ user.id ], function( err, articles ) {
+                        if( err ) return next( err );
+
+                        renderVals( req, res, next, "profile", { user: user, articles: articles, manage: req.session && user.name==req.session.loggedInUsername, title: user.name } );
+                    });
                 });
             });
         };
@@ -50,7 +59,7 @@ module.exports = {
 
         /* update profile details */
         function renderEditProfile( req, res, next, values ) {
-            db.query("SELECT email, details FROM users WHERE name=?", [req.session.loggedInUsername ], function( err, data ) {
+            db.query("SELECT avatar, image, email, details FROM users WHERE name=?", [req.session.loggedInUsername ], function( err, data ) {
                 if( err ) return next( err );
                 if( data.length != 1 ) return k.httpStatus( req, res, 404 );
 
@@ -59,7 +68,9 @@ module.exports = {
         }
         k.router.post("/edit", function( req, res, next ) {
             k.postman( req, res, function() {
-                db.query("UPDATE users SET email=?, details=? WHERE name=?", [
+                db.query("UPDATE users SET avatar=?, image=?, email=?, details=? WHERE name=?", [
+                    req.postman.link("avatar"),
+                    req.postman.link("image"),
                     req.postman.email(),
                     req.postman.text("details"),
                     req.session.loggedInUsername

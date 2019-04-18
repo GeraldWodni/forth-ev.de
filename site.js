@@ -174,6 +174,8 @@ module.exports = {
 
                     article.userEmailMd5 = md5( user.email );
                     article.userName = user.name;
+                    article.userAvatar = user.avatar;
+                    console.log( "UAV:", article.userAvatar );
 
                     renderVals( req, res, next, "singleArticle", { article: article } );
                 });
@@ -220,7 +222,7 @@ module.exports = {
                                 k.requestman( req );
                                 var offset = parseInt(req.requestman.uint("offset")||"0") || 0;
                                 return { articles: mysql.format(
-                                       "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName"
+                                       "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName, users.avatar AS userAvatar"
                                     + " FROM articles INNER JOIN users ON articles.user=users.id"
                                     + " WHERE category=? AND reveal < NOW() ORDER BY reveal DESC LIMIT ?,10", [ item.category, offset ] )
                                 }
