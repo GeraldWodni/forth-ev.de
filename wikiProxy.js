@@ -19,6 +19,9 @@ function mangleCommon( html ) {
     $("video[src^='/']").each(function() {
         $(this).attr("src", "/wiki/res" + $(this).attr("src"));
     });
+    $("video source[src^='/']").each(function() {
+        $(this).attr("src", "/wiki/res" + $(this).attr("src"));
+    });
 
     /* rewrite wiki-lokal images */
     $("img[src^='/']").each(function() {
