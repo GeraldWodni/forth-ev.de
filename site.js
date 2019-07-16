@@ -62,7 +62,7 @@ module.exports = {
         /** ajax api **/
         k.router.get("/ajax/articles/body/:id", function( req, res, next ) {
             k.requestman( req );
-            db.query("SELECT body FROM articles WHERE id=?", [ req.requestman.uint("id") ], function( err, data ) {
+            db.query("SELECT type,body FROM articles WHERE id=?", [ req.requestman.uint("id") ], function( err, data ) {
                 if( err ) return next( err );
                 if( data.length != 1 ) return httpStatus( req, res, 404 );
                 var body = data[0].body;
