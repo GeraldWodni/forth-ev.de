@@ -97,11 +97,11 @@ module.exports = {
         });
 
         /** wiki proxy **/
-        k.useSiteModule( "/wiki", "forth-ev.de", "wikiProxy.js", { setup: { vals: vals, renderVals: renderVals } } );
+        k.useSiteModule( "/wiki", k.website, "wikiProxy.js", { setup: { vals: vals, renderVals: renderVals } } );
 
         /** profile **/
         k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
-        k.useSiteModule( "/profile", "forth-ev.de", "profile.js", { setup: { vals: vals, renderVals: renderVals }, register: "profile" } );
+        k.useSiteModule( "/profile", k.website, "profile.js", { setup: { vals: vals, renderVals: renderVals }, register: "profile" } );
 
         /* TODO: get renderUser from profile-module */
         var renderUser = k.reg("profile").renderUser;
@@ -125,11 +125,11 @@ module.exports = {
         });
 
         /** administration **/
-        k.reg("admin").addSiteModule( "navigation", "forth-ev.de", "navigation.js", "Navigation",   "book"      );
-        k.reg("admin").addSiteModule( "categories", "forth-ev.de", "categories.js", "Categories",   "th-large"  );
-        k.reg("admin").addSiteModule( "articles",   "forth-ev.de", "articles.js",   "Articles",     "edit"      );
-        k.reg("admin").addSiteModule( "albums",     "forth-ev.de", "albums.js",     "Albums",       "camera"    );
-        k.reg("admin").addSiteModule( "db-users",   "forth-ev.de", "dbUsers.js",    "DB-Users",     "user"     );
+        k.reg("admin").addSiteModule( "navigation", k.website, "navigation.js", "Navigation",   "book"      );
+        k.reg("admin").addSiteModule( "categories", k.website, "categories.js", "Categories",   "th-large"  );
+        k.reg("admin").addSiteModule( "articles",   k.website, "articles.js",   "Articles",     "edit"      );
+        k.reg("admin").addSiteModule( "albums",     k.website, "albums.js",     "Albums",       "camera"    );
+        k.reg("admin").addSiteModule( "db-users",   k.website, "dbUsers.js",    "DB-Users",     "user"     );
 
 
         /** rendering **/
