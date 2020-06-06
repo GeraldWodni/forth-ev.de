@@ -47,6 +47,9 @@ bower_components
 # hide real config parameters
 config.json
 
+# hide users
+users.json
+
 # ignore packages, they are a separate repository
 package
 
