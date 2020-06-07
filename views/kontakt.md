@@ -10,5 +10,5 @@
  
 ````
 
- https://wiki.forth-ev.de/doku.php/infos
-wiki.forth-ev.de/doku.php/infos)
+ [weitere Kontaktoptionen](https://wiki.forth-ev.de/doku.php/infos)
+
