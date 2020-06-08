@@ -56,8 +56,18 @@ module.exports = {
         /* layout queries (to be used on every view) */
         var layoutQueries = {
             "navigationTop": "SELECT * FROM navigation WHERE position='top' ORDER BY priority",
-            "navigationBottom": "SELECT * FROM navigation WHERE position='bottom ORDER BY priority'"
+            "navigationBottom": "SELECT * FROM navigation WHERE position='bottom' ORDER BY priority"
         }
+
+        /* extend marked to allow embedding videos */
+        marked.use( { renderer: {
+            image: ( href, title, text ) => {
+                if( /\.mp4$/.test( href ) )
+                    return `<video controls style="max-width:100%"><source src="${href}" type="video/mp4"/>${text}</video>`;
+
+                return `<img src="${href}" alt="${text}"/>`;
+            }
+        }});
 
         /** ajax api **/
         k.router.get("/ajax/articles/body/:id", function( req, res, next ) {
