@@ -285,9 +285,18 @@ module.exports = {
                 /** home **/
                 provide( "get", "/", { queries: {
                     "articlesHot": "SELECT * FROM articles WHERE hot",
-                    "articles": "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName"
-                            + "  FROM articles INNER JOIN users ON articles.user=users.id"
-                            + "  WHERE frontPage AND DATE(expires) > NOW() AND DATE(reveal) < NOW() AND NOT hot ORDER BY reveal DESC LIMIT 10"
+                    articles: `
+                        SELECT
+                            articles.*,
+                            MD5(users.email) AS userEmailMd5,
+                            users.avatar AS userAvatar,
+                            users.name AS userName
+                        FROM articles
+                        INNER JOIN users
+                        ON articles.user=users.id
+                        WHERE frontPage AND DATE(expires) > NOW() AND DATE(reveal) < NOW() AND NOT hot
+                        ORDER BY reveal DESC
+                        LIMIT 10`
                 } }, function( req, res, next, data ) {
                     renderVals( req, res, next, "home", _.extend( data, vals( req, { bodyClass: "home" } ) ) );
                 });
