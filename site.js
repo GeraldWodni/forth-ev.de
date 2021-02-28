@@ -171,10 +171,8 @@ module.exports = {
         }
 
         /* single article */
-        /* TODO: use proper permalinks here instead of IDs! */
-        k.router.get("/articles/id/:id", function( req, res, next ) {
-            k.requestman(req);
-            kData.articles.read( req.requestman.id(), function( err, article ) {
+        function renderArticle( req, res, next, id ) {
+            kData.articles.read( id, function( err, article ) {
                 if( err ) return next( err );
                 if( article.length === 0 ) return k.httpStatus( req, res, 404 );
 
@@ -190,6 +188,16 @@ module.exports = {
                     renderVals( req, res, next, "singleArticle", { article: article } );
                 });
             });
+        }
+
+        /* article by id */
+        k.router.get("/articles/id/:id", function( req, res, next ) {
+            renderArticle( req, res, next, req.requestman.id() );
+        });
+
+        /* article permalink (parse id, ignore rest) */
+        k.router.get("/articles/:id/*", function( req, res, next ) {
+            renderArticle( req, res, next, req.requestman.id() );
         });
 
         var specials = {

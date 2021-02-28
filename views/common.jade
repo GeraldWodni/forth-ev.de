@@ -27,7 +27,11 @@ mixin article( article )
                 +fa("pencil")
         +avatar( article.userName, article.userEmailMd5, 64, article.userAvatar )
         .created= moment(article.reveal).format("DD.MM.YYYY")
-        h3= article.title
+        h3
+            - var linkTitle = article.title.toLowerCase().replace(/ +/g, '-').replace(/-+/g, '-').replace(/[^-_a-z0-9]/g, '')
+            a(href="/articles/#{article.id}/#{linkTitle}", title="Permalink").pull-left
+                +fa("share")
+            = article.title
         - var intro = article.type == "markdown" ? marked( article.intro ) : article.intro
         p!= intro.replace( /src="\/images\//g, 'src="https://forth-ev.de/images/' )
         if article.body.length > 0
