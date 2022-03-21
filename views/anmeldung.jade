@@ -4,13 +4,35 @@ block menu
     +menu
 
 block content
-    div.row
-        .div.col-sm-12
-            .alert.alert-warning
-                +fa("exclamation-triangle")
-                |  
-                b Dieses Formular befindet sich im Aufbau, bitte noch nicht nutzen.
-    div.row
-        div.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
-                a.btn.btn-primary(href="/")
-                    | Zurück zur Startseite
+    div.container
+        div.row
+            div.col-sm-12
+                .alert.alert-warning
+                    +fa("exclamation-triangle")
+                    |  
+                    b Dieses Formular befindet sich im Aufbau, bitte noch nicht nutzen.
+        form(method="get")
+            div.row
+                div.col-sm-12
+                    +messages( [] )
+
+            div.row
+                div.col-md-6
+                    +text-field( "firstName", "Vorname *" )
+                div.col-md-6
+                    +text-field( "name", "Name *" )
+            div.row
+                div.col-sm-12
+                    +text-field( "street", "Adresse *" )
+            div.row
+                div.col-md-6
+                    +text-field( "zipcode", "PLZ *" )
+                div.col-md-6
+                    +text-field( "city", "Ort *" )
+                div.col-sm-12
+                    +enum-field( "country", "Land *", ["Deutschland", "Schweiz", "Österreich", "TODO: use country-mixin"] )
+
+            div.row
+                div.col-md-12
+                    +enum-field( "country", "Mitgliedsbeiträge *", ["Schüler, Studenten, Rentner & Arbeitslose", "Ordenrliche Mitglieder, Auslandsadresse", "Fördernde Mitglieder, Firmen und Institutionen"] )
+                    p Zählt für das ganze Jahr
