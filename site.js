@@ -47,6 +47,10 @@ module.exports = {
             });
         });
 
+        k.router.get("/anmeldung", function( req, res, next ) {
+            renderVals( req, res, next, "anmeldung", { title: "Anmeldung" });
+        });
+
         /* explicit static content */
         k.router.get("/favicon.ico", k.serveStaticFile( "images/favicon.ico" ) );
 
