@@ -17,6 +17,8 @@ block content
                     +messages( [] )
 
             div.row
+                div.col-sm-12
+                    h3 Grundaten (notwendig):
                 div.col-md-6
                     +text-field( "firstName", "Vorname *" )
                 div.col-md-6
@@ -34,5 +36,37 @@ block content
 
             div.row
                 div.col-md-12
-                    +enum-field( "country", "Mitgliedsbeiträge *", ["Schüler, Studenten, Rentner & Arbeitslose", "Ordenrliche Mitglieder, Auslandsadresse", "Fördernde Mitglieder, Firmen und Institutionen"] )
-                    p Zählt für das ganze Jahr
+                    +enum-field( "country", "Mitgliedsbeiträge *", ["20€: Schüler, Studenten, Rentner & Arbeitslose", "40€: Ordenrliche Mitglieder, Auslandsadresse", "88€: Fördernde Mitglieder, Firmen und Institutionen"] )
+                    p Jahresbeitrag, Hinweis: wechselt ab 1.4. auf "Beitrag ab 1.4." usw.
+
+            div.row
+                div.col-sm-12
+                    h3 Zahlungsdaten:
+                div.col-md-6
+                    +enum-field( "payment", "Zahlungsart", ["Manuelle Überweisung", "SEPA-Lastschrift", "Paypal"] )
+                div.col-sm-12
+                    i Hier klappen entsprechend der Zahlungsart weitere Felder auf.
+
+            div.row
+                div.col-sm-12
+                    h3 Freiwillige Angaben für die Mitgliederstatistik:
+                div.col-md-6
+                    +text-field( "employment", "Beruf" )
+                div.col-md-6
+                    +number-field( "yearOfBirth", "Geburtsjahr", 1984 )
+                div.col-md-6
+                    +text-field( "language", "Sprache" )
+                div.col-md-6
+                    +text-field( "forth", "Forth" )
+                div.col-md-6
+                    +text-field( "computer", "Rechner" )
+                div.col-md-6
+                    +text-field( "os", "Betriebssystem" )
+
+                div.col-md-12
+                    +checkbox-field( "confirmation", "Ich bin mit ...(TODO)... einverstanden" )
+                    button(type="button").btn.btn-primary Anmelden
+  
+        div.row
+            div.col-sm-12
+                | Links zur Datenschutzerklärung, Satzung (TODO) usw. usf.
