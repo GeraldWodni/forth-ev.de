@@ -26,7 +26,7 @@ block content
 
         blockquote
             h4 Beispiel:
-            code : Quadrat ( n ¨C n^2 ) DUP * ;
+            code : Quadrat ( n -- n^2 ) DUP * ;
             p Hier wird mit dem : die Definition eines neuen Forth-Wortes eingeleitet.    Es erhält den Namen <em>Quadrat</em>. Der in Klammern stehende Kommentar drückt aus, daß    das Wort auf dem Stack eine Zahl <em>n</em> erwartet und deren Quadrat <em>n^2</em> hinterlässt. Die folgenden Worte bis zum die Definition beendenden ; werden    in das neue Forth-Wort kompiliert und bilden dessen Funktionalität.
             p Das neue Forth-Wort läßt sich mit
             code 7 Quadrat . &lt;cr&gt;<u> 49 ok </u>
