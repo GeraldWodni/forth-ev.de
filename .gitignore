@@ -44,12 +44,6 @@ bower_components
 # no less-based css
 /css/*.css
 
-# hide real config parameters
-config.json
-
-# hide users
-users.json
-
 # ignore packages, they are a separate repository
 package
 
@@ -59,5 +53,5 @@ ssh
 # ignore proxy cache
 proxy
 
-# configuration shall remain private
-config.json
+# ignore private repo
+private
