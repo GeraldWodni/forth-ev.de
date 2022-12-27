@@ -7,11 +7,10 @@ var _       = require("underscore");
 var { marked } = require('marked');
 var md5     = require("md5");
 var moment  = require("moment");
-var async   = require("async");
 var mysql   = require("mysql");
 
 module.exports = {
-    setup: function( k ) {
+    setup: async function( k ) {
 
         /* globals */
         var kData = k.getData();
@@ -225,14 +224,12 @@ module.exports = {
         };
 
         /* setup routes for dynamic content; async is used to make sure home and catchall do not register too soon */
-        async.series([
-            function( done ) {
-                /** categories **/
-                db.query( "SELECT * FROM navigation", function( err, data ) {
-                    if( err ) return console.log( err.toString().red.bold );
-
-                    /* register each navigation link first */
-                    data.forEach( function( item ) {
+        try {
+            /** categories **/
+            const navigationItems = await db.pQuery( "SELECT * FROM navigation" );
+            /* register each navigation link first */
+            for( const item of navigationItems ) {
+                        /* HINT: indentation kept this deep to allow easy diffing to pre-ES6-version */
                         /* do not register extenal links */
                         if( item.link.indexOf("http") >= 0 ) return;
 
@@ -241,7 +238,6 @@ module.exports = {
                         var queries = {};
                         if( item.category > 0 )
                             queries = function( req ) {
-                                k.requestman( req );
                                 var offset = parseInt(req.requestman.uint("offset")||"0") || 0;
                                 return { articles: mysql.format(
                                        "SELECT articles.*, MD5(users.email) AS userEmailMd5, users.name AS userName, users.avatar AS userAvatar"
@@ -287,13 +283,8 @@ module.exports = {
                                     httpStatus( req, res, 501, { title: "Unknown file-extension", text: "File-extension " + file.ext + " is not handled by site-provider" } );
                             }
                         });
-                    });
+            }
 
-                    /* register home */
-                    done();
-                });
-            },
-            function( done ) {
                 /** home **/
                 provide( "get", "/", { queries: {
                     "articlesHot": "SELECT * FROM articles WHERE hot",
@@ -312,9 +303,7 @@ module.exports = {
                 } }, function( req, res, next, data ) {
                     renderVals( req, res, next, "home", _.extend( data, vals( req, { bodyClass: "home" } ) ) );
                 });
-                done();
-            },
-            function( done ) {
+
                 /* catch all */
                 k.router.all("*", function( req, res, next ) {
                     /* allow admin */
@@ -323,9 +312,9 @@ module.exports = {
                     else
                         httpStatus( req, res, 404 );
                 });
-                done();
-            }
-        ]);
 
+        } catch( err ) {
+            console.log( "kern setup(k) Error:", err.toString().red.bold );
+        }
     }
 };
