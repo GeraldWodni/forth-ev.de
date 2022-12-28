@@ -228,7 +228,7 @@ module.exports = {
             /** categories **/
             const navigationItems = await db.pQuery( "SELECT * FROM navigation" );
             /* register each navigation link first */
-            for( const item of navigationItems ) {
+            navigationItems.forEach( item => {
                         /* HINT: indentation kept this deep to allow easy diffing to pre-ES6-version */
                         /* do not register extenal links */
                         if( item.link.indexOf("http") >= 0 ) return;
@@ -283,7 +283,7 @@ module.exports = {
                                     httpStatus( req, res, 501, { title: "Unknown file-extension", text: "File-extension " + file.ext + " is not handled by site-provider" } );
                             }
                         });
-            }
+            });
 
                 /** home **/
                 provide( "get", "/", { queries: {
