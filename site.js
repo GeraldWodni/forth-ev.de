@@ -110,7 +110,8 @@ module.exports = {
         });
 
         /** wiki proxy **/
-        k.useSiteModule( "/wiki", k.website, "wikiProxy.js", { setup: { vals: vals, renderVals: renderVals } } );
+	k.router.get("/wiki", (req, res ) => res.send( "Offline due to CVE-2026-109618 and CVE-2026-109619" ) );
+        //k.useSiteModule( "/wiki", k.website, "wikiProxy.js", { setup: { vals: vals, renderVals: renderVals } } );
 
         /** profile **/
         k.router.use( k.users.loginRequired( "login", { path: "/profile" } ) );
